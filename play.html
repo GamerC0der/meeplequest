@@ -16,6 +16,7 @@ body {
 </div>
 
 <img id="player-meeple" src="/static/meeple-blue.png" alt="Player Meeple" style="width: 256px; height: 256px; position: absolute; cursor: pointer; image-rendering: pixelated;">
+<img id="equipped-hat" src="" alt="Equipped Hat" style="width: 64px; height: 64px; position: absolute; image-rendering: pixelated; display: none; pointer-events: none;">
 <img id="arcade" src="/static/arcade.png" alt="Arcade" style="width: 200px; height: auto; position: absolute; pointer-events: none;">
 <img id="collectible-coin" src="/static/coin.png" alt="Collectible Coin" style="width: 64px; height: 64px; position: absolute; left: 2rem; bottom: 2rem; image-rendering: pixelated; cursor: pointer;">
 <img id="market" src="/static/market.png" alt="Market" style="position: absolute; top: 68%; left: 25%; width: 375px; height: auto; image-rendering: pixelated; z-index: 50; cursor: pointer;">
@@ -70,8 +71,68 @@ body {
         <button id="close-modal-btn" style="position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; z-index: 20;">×</button>
     </div>
 </div>
+<div id="player-menu" style="display: none; position: absolute; background: url(/static/textbg.png) center/cover; padding: 3rem; border-radius: 15px; image-rendering: pixelated; z-index: 200; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 200px;">
+    <button id="close-player-menu-btn" style="position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 30px; height: 30px; font-size: 18px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive;">×</button>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+        <img id="menu-meeple-img" src="/static/meeple-blue.png" alt="Meeple" style="width: 128px; height: 128px; image-rendering: pixelated; display: block;">
+        <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.9); padding: 0.5rem 1rem; border-radius: 8px;">
+            <img src="/static/coin.png" alt="Coin" style="width: 24px; height: 24px; image-rendering: pixelated;">
+            <span style="color: #2F1B14; font-family: 'Georgia', serif; font-size: 1.1rem; font-weight: bold;">Coins: <span id="menu-coin-count">0</span></span>
+        </div>
+        <button id="inventory-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 0.5rem 1rem; font-family: 'Georgia', serif; font-size: 1rem; font-weight: bold; cursor: pointer;">Inventory</button>
+    </div>
+</div>
+
+<div id="inventory-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1200;">
+    <div style="background: url(/static/textbg.png) center/cover; width: 80%; height: 80%; max-width: 600px; max-height: 500px; border-radius: 20px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
+        <button id="close-inventory-modal-btn" style="position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; z-index: 20;">×</button>
+        <h1 style="color: #8B4513; font-family: 'Georgia', serif; font-size: 2.5rem; font-weight: bold; text-transform: uppercase; margin: 0 0 1rem 0; text-shadow: 3px 3px 6px rgba(0,0,0,0.9); -webkit-text-stroke: 1px #2F1B14;">INVENTORY</h1>
+        <input type="text" id="inventory-search" placeholder="Search inventory..." style="width: 80%; max-width: 300px; padding: 0.75rem; border: 2px solid #8B4513; border-radius: 8px; font-family: 'Georgia', serif; font-size: 1rem; background: rgba(255,255,255,0.9); color: #2F1B14; margin-bottom: 1rem;">
+        <div id="inventory-content" style="display: flex; flex-direction: column; gap: 1rem; align-items: center;">
+
+        </div>
+    </div>
+</div>
+
+<div id="item-menu" style="display: none; position: absolute; background: url(/static/textbg.png) center/cover; padding: 0.5rem; border-radius: 10px; image-rendering: pixelated; z-index: 1300; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+    <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <button id="equip-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 6px; padding: 0.5rem 1rem; font-family: 'Georgia', serif; font-size: 0.9rem; font-weight: bold; cursor: pointer;">Equip</button>
+        <button id="close-item-menu-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 24px; height: 24px; font-size: 14px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive;">×</button>
+    </div>
+</div>
+
 <div id="market-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
-    <div style="background: url(/static/textbg.png) center/cover; width: 80%; height: 80%; max-width: 800px; max-height: 600px; border-radius: 20px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); image-rendering: pixelated;">
+    <div style="background: url(/static/textbg.png) center/cover; width: 80%; height: 80%; max-width: 800px; max-height: 600px; border-radius: 20px; position: absolute; top: 50%; left: 35%; transform: translate(-50%, -50%); image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
+        <h1 style="color: #8B4513; font-family: 'Georgia', serif; font-size: 2.5rem; font-weight: bold; text-transform: uppercase; margin: 0 0 2rem 0; text-shadow: 3px 3px 6px rgba(0,0,0,0.9); -webkit-text-stroke: 1px #2F1B14;">MARKET</h1>
+        <div style="display: flex; flex-direction: column; gap: 1.5rem; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.9); padding: 1rem; border-radius: 10px; width: 300px; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <img src="/static/hat.png" alt="Hat" style="width: 48px; height: 48px; image-rendering: pixelated;">
+                    <span style="color: #2F1B14; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold;">Hat</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <img src="/static/coin.png" alt="Coin" style="width: 24px; height: 24px; image-rendering: pixelated;">
+                        <span style="color: #8B4513; font-family: 'Georgia', serif; font-size: 1.2rem; font-weight: bold;">$100</span>
+                    </div>
+                    <button id="hat-buy-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 0.5rem 1rem; font-family: 'Georgia', serif; font-size: 1rem; font-weight: bold; cursor: pointer;">Buy</button>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.9); padding: 1rem; border-radius: 10px; width: 300px; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <img src="/static/pirate_hat.png" alt="Pirate Hat" style="width: 48px; height: 48px; image-rendering: pixelated;">
+                    <span style="color: #2F1B14; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold;">Pirate Hat</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <img src="/static/coin.png" alt="Coin" style="width: 24px; height: 24px; image-rendering: pixelated;">
+                        <span style="color: #8B4513; font-family: 'Georgia', serif; font-size: 1.2rem; font-weight: bold;">$250</span>
+                    </div>
+                    <button id="pirate-hat-buy-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 0.5rem 1rem; font-family: 'Georgia', serif; font-size: 1rem; font-weight: bold; cursor: pointer;">Buy</button>
+                </div>
+            </div>
+            <p style="color: #2F1B14; font-family: 'Georgia', serif; font-size: 1rem; font-style: italic; margin: 1rem 0 0 0; text-align: center; max-width: 400px;">To see your inventory, please click on your player.</p>
+        </div>
         <button id="close-market-modal-btn" style="position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; z-index: 20;">×</button>
     </div>
 </div>
@@ -91,6 +152,57 @@ document.addEventListener('DOMContentLoaded', function() {
     const marketImg = document.getElementById('market');
     const marketModal = document.getElementById('market-modal');
     const closeMarketModalBtn = document.getElementById('close-market-modal-btn');
+    const playerMenu = document.getElementById('player-menu');
+    const menuMeepleImg = document.getElementById('menu-meeple-img');
+    const inventoryBtn = document.getElementById('inventory-btn');
+    const closePlayerMenuBtn = document.getElementById('close-player-menu-btn');
+    const inventoryModal = document.getElementById('inventory-modal');
+    const closeInventoryModalBtn = document.getElementById('close-inventory-modal-btn');
+    const inventoryContent = document.getElementById('inventory-content');
+    const inventorySearch = document.getElementById('inventory-search');
+    const itemMenu = document.getElementById('item-menu');
+    const equipBtn = document.getElementById('equip-btn');
+    const closeItemMenuBtn = document.getElementById('close-item-menu-btn');
+    const equippedHat = document.getElementById('equipped-hat');
+
+    let selectedItemForEquip = null;
+    let currentlyEquippedItem = localStorage.getItem('currentlyEquippedItem') || null;
+
+    function updateHatDisplay() {
+        if (currentlyEquippedItem) {
+            if (currentlyEquippedItem === 'Hat') {
+                equippedHat.src = '/static/hat.png';
+            } else if (currentlyEquippedItem === 'Pirate Hat') {
+                equippedHat.src = '/static/pirate_hat.png';
+            }
+            equippedHat.style.display = 'block';
+            positionHat();
+        } else {
+            equippedHat.style.display = 'none';
+        }
+    }
+
+    function positionHat() {
+        if (currentlyEquippedItem && equippedHat.style.display !== 'none') {
+            const meepleRect = meeple.getBoundingClientRect();
+            equippedHat.style.position = 'fixed';
+            equippedHat.style.left = (meepleRect.left + meepleRect.width / 2 - 32) + 'px';
+            equippedHat.style.top = (meepleRect.top + 10) + 'px';
+            equippedHat.style.zIndex = '100';
+        }
+    }
+
+    function equipItem(itemName) {
+        currentlyEquippedItem = itemName;
+        localStorage.setItem('currentlyEquippedItem', itemName);
+        updateHatDisplay();
+    }
+
+    function unequipItem() {
+        currentlyEquippedItem = null;
+        localStorage.removeItem('currentlyEquippedItem');
+        updateHatDisplay();
+    }
 
     const newsPage1 = document.getElementById('news-page-1');
     const newsPage2 = document.getElementById('news-page-2');
@@ -109,9 +221,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     meeple.src = `/static/meeple-${selectedColor}.png`;
+    menuMeepleImg.src = `/static/meeple-${selectedColor}.png`;
+
     meeple.style.left = '50%';
     meeple.style.top = '50%';
     meeple.style.transform = 'translate(-50%, -50%)';
+
+    setTimeout(() => {
+        updateHatDisplay();
+    }, 50);
 
     arcade.style.left = 'calc(50% + 100px + 25%)';
     arcade.style.top = '50%';
@@ -186,6 +304,14 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('totalCoins', newCoins.toString());
         coinCountElement.textContent = newCoins;
 
+        if (marketModal.style.display === 'flex') {
+            updateMarketButtons();
+        }
+
+        if (playerMenu.style.display === 'block') {
+            updatePlayerMenuCoins();
+        }
+
         setTimeout(respawnCoin, Math.random() * 10000 + 5000);
     }
 
@@ -204,11 +330,107 @@ document.addEventListener('DOMContentLoaded', function() {
         meeple.style.top = targetY + 'px';
         meeple.style.transform = 'none';
 
-        setTimeout(checkProximity, duration * 1000);
+        if (currentlyEquippedItem) {
+            equippedHat.style.transition = `all ${duration}s ease-in-out`;
+            equippedHat.style.left = (targetX + meeple.clientWidth / 2 - 32) + 'px';
+            equippedHat.style.top = (targetY + 10) + 'px';
+        }
+
+        setTimeout(function() {
+            checkProximity();
+            if (currentlyEquippedItem) {
+                equippedHat.style.transition = '';
+            }
+        }, duration * 1000);
     }
 
     const totalCoins = parseInt(localStorage.getItem('totalCoins') || '0');
     document.getElementById('coin-count').textContent = totalCoins;
+
+    function updateMarketButtons() {
+        const currentCoins = parseInt(localStorage.getItem('totalCoins') || '0');
+        const hatBtn = document.getElementById('hat-buy-btn');
+        const pirateHatBtn = document.getElementById('pirate-hat-buy-btn');
+
+        const hatPurchased = localStorage.getItem('hatPurchased') === 'true';
+        const pirateHatPurchased = localStorage.getItem('pirateHatPurchased') === 'true';
+
+        if (hatPurchased) {
+            hatBtn.textContent = 'Bought';
+            hatBtn.style.background = 'rgba(34,139,34,0.8)';
+            hatBtn.style.color = 'white';
+            hatBtn.style.borderColor = '#228B22';
+            hatBtn.style.cursor = 'default';
+            hatBtn.disabled = true;
+        } else if (currentCoins >= 100) {
+            hatBtn.textContent = 'Buy';
+            hatBtn.style.background = 'rgba(0,0,0,0.8)';
+            hatBtn.style.color = 'white';
+            hatBtn.style.borderColor = '#8B4513';
+            hatBtn.style.cursor = 'pointer';
+            hatBtn.disabled = false;
+        } else {
+            hatBtn.textContent = 'Buy';
+            hatBtn.style.background = 'rgba(128,128,128,0.5)';
+            hatBtn.style.color = 'rgba(255,255,255,0.5)';
+            hatBtn.style.borderColor = 'rgba(139,69,19,0.5)';
+            hatBtn.style.cursor = 'not-allowed';
+            hatBtn.disabled = true;
+        }
+
+        if (pirateHatPurchased) {
+            pirateHatBtn.textContent = 'Bought';
+            pirateHatBtn.style.background = 'rgba(34,139,34,0.8)';
+            pirateHatBtn.style.color = 'white';
+            pirateHatBtn.style.borderColor = '#228B22';
+            pirateHatBtn.style.cursor = 'default';
+            pirateHatBtn.disabled = true;
+        } else if (currentCoins >= 250) {
+            pirateHatBtn.textContent = 'Buy';
+            pirateHatBtn.style.background = 'rgba(0,0,0,0.8)';
+            pirateHatBtn.style.color = 'white';
+            pirateHatBtn.style.borderColor = '#8B4513';
+            pirateHatBtn.style.cursor = 'pointer';
+            pirateHatBtn.disabled = false;
+        } else {
+            pirateHatBtn.textContent = 'Buy';
+            pirateHatBtn.style.background = 'rgba(128,128,128,0.5)';
+            pirateHatBtn.style.color = 'rgba(255,255,255,0.5)';
+            pirateHatBtn.style.borderColor = 'rgba(139,69,19,0.5)';
+            pirateHatBtn.style.cursor = 'not-allowed';
+            pirateHatBtn.disabled = true;
+        }
+    }
+
+    function buyHat() {
+        const currentCoins = parseInt(localStorage.getItem('totalCoins') || '0');
+        if (currentCoins >= 100) {
+            const newCoins = currentCoins - 100;
+            localStorage.setItem('totalCoins', newCoins.toString());
+            localStorage.setItem('hatPurchased', 'true');
+            document.getElementById('coin-count').textContent = newCoins;
+            updateMarketButtons();
+
+            if (playerMenu.style.display === 'block') {
+                updatePlayerMenuCoins();
+            }
+        }
+    }
+
+    function buyPirateHat() {
+        const currentCoins = parseInt(localStorage.getItem('totalCoins') || '0');
+        if (currentCoins >= 250) {
+            const newCoins = currentCoins - 250;
+            localStorage.setItem('totalCoins', newCoins.toString());
+            localStorage.setItem('pirateHatPurchased', 'true');
+            document.getElementById('coin-count').textContent = newCoins;
+            updateMarketButtons();
+
+            if (playerMenu.style.display === 'block') {
+                updatePlayerMenuCoins();
+            }
+        }
+    }
 
     newsBtn.addEventListener('click', function(event) {
         event.stopPropagation();
@@ -232,10 +454,161 @@ document.addEventListener('DOMContentLoaded', function() {
         marketModal.style.display = 'flex';
         marketModal.style.justifyContent = 'center';
         marketModal.style.alignItems = 'center';
+        updateMarketButtons();
+    });
+
+    document.getElementById('hat-buy-btn').addEventListener('click', function() {
+        if (!this.disabled) {
+            buyHat();
+        }
+    });
+
+    document.getElementById('pirate-hat-buy-btn').addEventListener('click', function() {
+        if (!this.disabled) {
+            buyPirateHat();
+        }
+    });
+
+    function updatePlayerMenuCoins() {
+        const currentCoins = parseInt(localStorage.getItem('totalCoins') || '0');
+        document.getElementById('menu-coin-count').textContent = currentCoins;
+    }
+
+    function updateInventoryDisplay(searchTerm = '') {
+        inventoryContent.innerHTML = '';
+
+        const hatPurchased = localStorage.getItem('hatPurchased') === 'true';
+        const pirateHatPurchased = localStorage.getItem('pirateHatPurchased') === 'true';
+
+        const items = [];
+
+        if (hatPurchased) {
+            items.push({ name: 'Hat', img: '/static/hat.png' });
+        }
+
+        if (pirateHatPurchased) {
+            items.push({ name: 'Pirate Hat', img: '/static/pirate_hat.png' });
+        }
+
+        const filteredItems = items.filter(item =>
+            item.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+        if (filteredItems.length === 0) {
+            const noItems = document.createElement('span');
+            noItems.textContent = searchTerm ? 'No items match your search' : 'No items yet';
+            noItems.style.color = '#666';
+            noItems.style.fontStyle = 'italic';
+            noItems.style.fontSize = '0.9rem';
+            inventoryContent.appendChild(noItems);
+        } else {
+            filteredItems.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.style.display = 'flex';
+                itemDiv.style.alignItems = 'center';
+                itemDiv.style.gap = '0.5rem';
+                itemDiv.style.background = 'rgba(255,255,255,0.9)';
+                itemDiv.style.padding = '0.5rem 0.75rem';
+                itemDiv.style.borderRadius = '6px';
+                itemDiv.style.cursor = 'pointer';
+                itemDiv.innerHTML = `<img src="${item.img}" alt="${item.name}" style="width: 24px; height: 24px; image-rendering: pixelated;"><span style="color: #2F1B14; font-family: 'Georgia', serif; font-size: 0.9rem; font-weight: bold;">${item.name}</span>`;
+
+                itemDiv.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    selectedItemForEquip = item.name;
+
+                    const rect = itemDiv.getBoundingClientRect();
+                    const modalRect = inventoryModal.getBoundingClientRect();
+
+                    itemMenu.style.left = (rect.left - modalRect.left + rect.width + 10) + 'px';
+                    itemMenu.style.top = (rect.top - modalRect.top) + 'px';
+
+                    if (currentlyEquippedItem === item.name) {
+                        equipBtn.textContent = 'Unequip';
+                        equipBtn.style.background = 'rgba(139,69,19,0.8)';
+                        equipBtn.style.borderColor = '#654321';
+                    } else {
+                        equipBtn.textContent = 'Equip';
+                        equipBtn.style.background = 'rgba(0,0,0,0.8)';
+                        equipBtn.style.borderColor = '#8B4513';
+                    }
+
+                    itemMenu.style.display = 'block';
+                });
+
+                inventoryContent.appendChild(itemDiv);
+            });
+        }
+    }
+
+    inventoryBtn.addEventListener('click', function() {
+        updateInventoryDisplay();
+        inventoryModal.style.display = 'flex';
+        inventoryModal.style.justifyContent = 'center';
+        inventoryModal.style.alignItems = 'center';
+    });
+
+    meeple.addEventListener('click', function(event) {
+        event.stopPropagation();
+        if (playerMenu.style.display === 'none' || playerMenu.style.display === '') {
+            const meepleRect = meeple.getBoundingClientRect();
+            playerMenu.style.left = (meepleRect.right + 20) + 'px'; 
+            playerMenu.style.top = (meepleRect.top - 50) + 'px';
+            updatePlayerMenuCoins();
+            playerMenu.style.display = 'block';
+        } else {
+            playerMenu.style.display = 'none';
+        }
     });
 
     closeMarketModalBtn.addEventListener('click', function() {
         marketModal.style.display = 'none';
+    });
+
+    closePlayerMenuBtn.addEventListener('click', function() {
+        playerMenu.style.display = 'none';
+    });
+
+    closeInventoryModalBtn.addEventListener('click', function() {
+        inventoryModal.style.display = 'none';
+        itemMenu.style.display = 'none';
+    });
+
+    inventoryModal.addEventListener('click', function(event) {
+        if (event.target === inventoryModal) {
+            inventoryModal.style.display = 'none';
+        }
+    });
+
+    inventorySearch.addEventListener('input', function() {
+        updateInventoryDisplay(this.value);
+        itemMenu.style.display = 'none'; 
+    });
+
+    equipBtn.addEventListener('click', function() {
+        if (selectedItemForEquip) {
+            if (currentlyEquippedItem === selectedItemForEquip) {
+                unequipItem();
+                alert(`Unequipped ${selectedItemForEquip}!`);
+            } else {
+                equipItem(selectedItemForEquip);
+                alert(`Equipped ${selectedItemForEquip}!`);
+            }
+            itemMenu.style.display = 'none';
+            selectedItemForEquip = null;
+        }
+    });
+
+    closeItemMenuBtn.addEventListener('click', function() {
+        itemMenu.style.display = 'none';
+        selectedItemForEquip = null;
+    });
+
+    inventoryModal.addEventListener('click', function(event) {
+        if (event.target === inventoryModal) {
+            inventoryModal.style.display = 'none';
+            itemMenu.style.display = 'none'; 
+        }
     });
 
     marketModal.addEventListener('click', function(event) {
@@ -277,13 +650,22 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.addEventListener('click', function(event) {
-        const rect = meeple.getBoundingClientRect();
-        const arcadeRect = arcade.getBoundingClientRect();
-        let targetX = event.clientX - 128;
-        let targetY = event.clientY - 128;
+        if (playerMenu.style.display === 'block' && !playerMenu.contains(event.target) && event.target !== meeple) {
+            playerMenu.style.display = 'none';
+        }
 
+        const isButton = event.target.tagName === 'BUTTON' || event.target.closest('button');
+        const isInteractive = event.target === marketImg || event.target === newsBtn || event.target === meeple || event.target === inventoryBtn;
+        const isItemMenu = event.target.closest('#item-menu');
 
-        moveMeeple(targetX, targetY);
+        if (!isButton && !isInteractive && !isItemMenu) {
+            const rect = meeple.getBoundingClientRect();
+            const arcadeRect = arcade.getBoundingClientRect();
+            let targetX = event.clientX - 128;
+            let targetY = event.clientY - 128;
+
+            moveMeeple(targetX, targetY);
+        }
     });
 
 });
