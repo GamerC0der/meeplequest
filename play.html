@@ -10,8 +10,71 @@ body {
 }
 </style>
 
+<div id="coin-counter" style="position: fixed; top: 2rem; right: 2rem; display: flex; align-items: center; gap: 0.5rem; background: rgba(0,0,0,0.7); padding: 0.5rem 1rem; border-radius: 10px; color: white; font-size: 1.5rem; z-index: 100; font-family: 'Fredoka One', cursive;">
+    <img src="/static/coin.png" alt="Coin" style="width: 32px; height: 32px; image-rendering: pixelated;">
+    <span id="coin-count">0</span>
+</div>
+
 <img id="player-meeple" src="/static/meeple-blue.png" alt="Player Meeple" style="width: 256px; height: 256px; position: absolute; cursor: pointer; image-rendering: pixelated;">
 <img id="arcade" src="/static/arcade.png" alt="Arcade" style="width: 200px; height: auto; position: absolute; pointer-events: none;">
+<img id="collectible-coin" src="/static/coin.png" alt="Collectible Coin" style="width: 64px; height: 64px; position: absolute; left: 2rem; bottom: 2rem; image-rendering: pixelated; cursor: pointer;">
+<img id="market" src="/static/market.png" alt="Market" style="position: absolute; top: 68%; left: 25%; width: 375px; height: auto; image-rendering: pixelated; z-index: 50; cursor: pointer;">
+<button id="news-btn" style="position: fixed; right: 2rem; bottom: 2rem; background: rgba(0,0,0,0.7); border: 2px solid white; border-radius: 10px; padding: 0.5rem; cursor: pointer; z-index: 100;">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19 3H5C3.89 3 3 3.89 3 5V19C3 20.11 3.89 21 5 21H19C20.11 21 21 20.11 21 19V5C21 3.89 20.11 3 19 3ZM19 19H5V5H19V19Z" fill="white"/>
+        <path d="M7 7H17V9H7V7ZM7 11H17V13H7V11ZM7 15H13V17H7V15Z" fill="white"/>
+    </svg>
+</button>
+<div id="news-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
+    <div style="background: url(/static/textbg.png) center/cover; width: 80%; height: 80%; max-width: 800px; max-height: 600px; border-radius: 20px; position: relative; image-rendering: pixelated;">
+        <div style="position: absolute; top: 2rem; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10;">
+            <h1 style="color: #2F1B14; font-family: 'Georgia', 'Times New Roman', serif; font-size: 3rem; font-weight: bold; text-shadow: 3px 3px 6px rgba(0,0,0,0.9); margin: 0; text-transform: uppercase; letter-spacing: 0.15em; -webkit-text-stroke: 1px #8B4513;">THE SIEGE TIMES</h1>
+            <div style="color: #8B4513; font-family: 'Times New Roman', serif; font-size: 1.2rem; font-weight: bold; margin-top: 0.5rem;">Sep 29, 2025</div>
+        </div>
+
+        <button id="prev-page-btn" style="position: absolute; top: 50%; left: 1rem; transform: translateY(-50%); background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; font-weight: bold; cursor: pointer; display: none; z-index: 15;">←</button>
+        <button id="next-page-btn" style="position: absolute; top: 50%; right: 1rem; transform: translateY(-50%); background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; font-weight: bold; cursor: pointer; z-index: 15;">→</button>
+
+        <div style="position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.5rem; z-index: 15;">
+            <div id="page-dot-1" style="width: 12px; height: 12px; border-radius: 50%; background: white; border: 2px solid #8B4513;"></div>
+            <div id="page-dot-2" style="width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.5); border: 2px solid #8B4513;"></div>
+        </div>
+
+        <div id="news-page-1" style="position: absolute; bottom: 0; left: 0; right: 0; height: 50%; background: rgba(255,255,255,0.95); border-radius: 0 0 20px 20px; padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                <img src="/static/meeple-blue.png" alt="Blue Meeple" style="width: 80px; height: 80px; image-rendering: pixelated;">
+                <img src="/static/meeple-green.png" alt="Green Meeple" style="width: 80px; height: 80px; image-rendering: pixelated;">
+                <img src="/static/meeple-purple.png" alt="Purple Meeple" style="width: 80px; height: 80px; image-rendering: pixelated;">
+                <img src="/static/meeple-red.png" alt="Red Meeple" style="width: 80px; height: 80px; image-rendering: pixelated;">
+            </div>
+            <h2 style="color: #8B4513; font-family: 'Georgia', serif; font-size: 1.2rem; font-weight: bold; text-transform: uppercase; margin: 0 0 0.5rem 0; text-align: center;">
+                The Siege
+            </h2>
+            <p style="color: #2F1B14; font-family: 'Times New Roman', serif; font-size: 0.9rem; line-height: 1.4; margin: 0; text-align: center; max-width: 400px;">
+                The siege has began, and we (us meeples!) are as great as ever. We come in four colors!
+            </p>
+        </div>
+
+        <div id="news-page-2" style="position: absolute; bottom: 0; left: 0; right: 0; height: 50%; background: rgba(255,255,255,0.95); border-radius: 0 0 20px 20px; padding: 2rem; display: none; flex-direction: column; align-items: center; justify-content: center;">
+            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                <img src="/static/coin.png" alt="Coin" style="width: 60px; height: 60px; image-rendering: pixelated; margin-right: 1rem;">
+                <h2 style="color: #8B4513; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold; text-transform: uppercase; margin: 0;">
+                    Coins
+                </h2>
+            </div>
+            <p style="color: #2F1B14; font-family: 'Times New Roman', serif; font-size: 0.9rem; line-height: 1.6; margin: 0; text-align: center; max-width: 400px;">
+                You can earn coins by completing minigames or walking around the castle. The coins on the castle reset every 30 seconds.
+            </p>
+        </div>
+
+        <button id="close-modal-btn" style="position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; z-index: 20;">×</button>
+    </div>
+</div>
+<div id="market-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
+    <div style="background: url(/static/textbg.png) center/cover; width: 80%; height: 80%; max-width: 800px; max-height: 600px; border-radius: 20px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); image-rendering: pixelated;">
+        <button id="close-market-modal-btn" style="position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; z-index: 20;">×</button>
+    </div>
+</div>
 <div id="pixel-art-text" style="position: absolute; color: white; font-family: 'Fredoka One', cursive; font-size: 24px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); pointer-events: none; opacity: 0; transition: opacity 0.3s ease-in-out;">!</div>
 
 
@@ -20,6 +83,30 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectedColor = localStorage.getItem('selectedMeepleColor') || 'blue';
     const meeple = document.getElementById('player-meeple');
     const arcade = document.getElementById('arcade');
+    const collectibleCoin = document.getElementById('collectible-coin');
+    const coinCountElement = document.getElementById('coin-count');
+    const newsBtn = document.getElementById('news-btn');
+    const newsModal = document.getElementById('news-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const marketImg = document.getElementById('market');
+    const marketModal = document.getElementById('market-modal');
+    const closeMarketModalBtn = document.getElementById('close-market-modal-btn');
+
+    const newsPage1 = document.getElementById('news-page-1');
+    const newsPage2 = document.getElementById('news-page-2');
+    const prevPageBtn = document.getElementById('prev-page-btn');
+    const nextPageBtn = document.getElementById('next-page-btn');
+    const pageDot1 = document.getElementById('page-dot-1');
+    const pageDot2 = document.getElementById('page-dot-2');
+
+    let currentPage = 1;
+
+    const lastCollectedTime = localStorage.getItem('lastCoinCollected');
+    if (lastCollectedTime && Date.now() - parseInt(lastCollectedTime) < 30000) {
+        collectibleCoin.style.display = 'none';
+        const remainingTime = 30000 - (Date.now() - parseInt(lastCollectedTime));
+        setTimeout(respawnCoin, remainingTime);
+    }
 
     meeple.src = `/static/meeple-${selectedColor}.png`;
     meeple.style.left = '50%';
@@ -69,6 +156,41 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             pixelArtText.style.opacity = '0';
         }
+
+        checkCoinCollection();
+    }
+
+    function checkCoinCollection() {
+        if (collectibleCoin.style.display === 'none') return;
+
+        const meepleRect = meeple.getBoundingClientRect();
+        const coinRect = collectibleCoin.getBoundingClientRect();
+
+        const isOverlapping = !(meepleRect.right < coinRect.left ||
+                               meepleRect.left > coinRect.right ||
+                               meepleRect.bottom < coinRect.top ||
+                               meepleRect.top > coinRect.bottom);
+
+        if (isOverlapping) {
+            collectCoin();
+        }
+    }
+
+    function collectCoin() {
+        collectibleCoin.style.display = 'none';
+
+        localStorage.setItem('lastCoinCollected', Date.now().toString());
+
+        const currentCoins = parseInt(localStorage.getItem('totalCoins') || '0');
+        const newCoins = currentCoins + 1;
+        localStorage.setItem('totalCoins', newCoins.toString());
+        coinCountElement.textContent = newCoins;
+
+        setTimeout(respawnCoin, Math.random() * 10000 + 5000);
+    }
+
+    function respawnCoin() {
+        collectibleCoin.style.display = 'block';
     }
 
     function moveMeeple(targetX, targetY) {
@@ -84,6 +206,75 @@ document.addEventListener('DOMContentLoaded', function() {
 
         setTimeout(checkProximity, duration * 1000);
     }
+
+    const totalCoins = parseInt(localStorage.getItem('totalCoins') || '0');
+    document.getElementById('coin-count').textContent = totalCoins;
+
+    newsBtn.addEventListener('click', function(event) {
+        event.stopPropagation();
+        newsModal.style.display = 'flex';
+        newsModal.style.justifyContent = 'center';
+        newsModal.style.alignItems = 'center';
+        showPage(1);
+    });
+
+    closeModalBtn.addEventListener('click', function() {
+        newsModal.style.display = 'none';
+    });
+
+    newsModal.addEventListener('click', function(event) {
+        if (event.target === newsModal) {
+            newsModal.style.display = 'none';
+        }
+    });
+
+    marketImg.addEventListener('click', function() {
+        marketModal.style.display = 'flex';
+        marketModal.style.justifyContent = 'center';
+        marketModal.style.alignItems = 'center';
+    });
+
+    closeMarketModalBtn.addEventListener('click', function() {
+        marketModal.style.display = 'none';
+    });
+
+    marketModal.addEventListener('click', function(event) {
+        if (event.target === marketModal) {
+            marketModal.style.display = 'none';
+        }
+    });
+
+    function showPage(pageNum) {
+        currentPage = pageNum;
+
+        if (pageNum === 1) {
+            newsPage1.style.display = 'flex';
+            newsPage2.style.display = 'none';
+            prevPageBtn.style.display = 'none';
+            nextPageBtn.style.display = 'block';
+            pageDot1.style.background = 'white';
+            pageDot2.style.background = 'rgba(255,255,255,0.5)';
+        } else if (pageNum === 2) {
+            newsPage1.style.display = 'none';
+            newsPage2.style.display = 'flex';
+            prevPageBtn.style.display = 'block';
+            nextPageBtn.style.display = 'none';
+            pageDot1.style.background = 'rgba(255,255,255,0.5)';
+            pageDot2.style.background = 'white';
+        }
+    }
+
+    nextPageBtn.addEventListener('click', function() {
+        if (currentPage < 2) {
+            showPage(currentPage + 1);
+        }
+    });
+
+    prevPageBtn.addEventListener('click', function() {
+        if (currentPage > 1) {
+            showPage(currentPage - 1);
+        }
+    });
 
     document.addEventListener('click', function(event) {
         const rect = meeple.getBoundingClientRect();

@@ -4,7 +4,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     <style>
         body {
-            background: url(/static/minigame_1.png) center/cover;
+            background: url(/static/minigame_1.png) center/cover fixed;
             margin: 0; padding: 0; min-height: 100vh;
             font-family: 'Fredoka One', cursive;
             image-rendering: pixelated;
@@ -16,26 +16,27 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const selectedColor = localStorage.getItem('selectedMeepleColor') || 'blue';
-            const meepleDisplay = document.getElementById('player-meeple-display');
-            meepleDisplay.src = `/static/meeple-${selectedColor}.png`;
+            const meeple = document.getElementById('player-meeple-display');
+            meeple.src = `/static/meeple-${selectedColor}.png`;
 
-            let velocityY = 0;
-            let gravity = 0.3;
-            let groundY = 65;
-            let isJumping = false;
-            let jumpCharge = 0;
-            let maxJumpCharge = 8;
-            let isChargingJump = false;
-
+            meeple.style.left = '2rem';
+            meeple.style.top = '65%';
+            meeple.style.transform = 'translateY(-50%)';
             let coins = [];
-            let coinSpeed = 4;
+            let collectedCoins = 0;
             let lastCoinSpawn = 0;
-            let coinSpawnInterval = 2000; 
+            let coinSpawnInterval = 500; 
+            let coinFallSpeed = 4;
+            let gameOver = false;
+
+            const totalCoins = parseInt(localStorage.getItem('totalCoins') || '0');
+            document.getElementById('coin-count').textContent = collectedCoins;
 
             function createCoin() {
                 const coin = document.createElement('img');
-                coin.src = '/static/coin.png';
-                coin.className = 'coin';
+                const isRedCoin = Math.random() < 0.1; 
+
+                coin.src = isRedCoin ? '/static/red-coin.png' : '/static/coin.png';
                 coin.style.cssText = `
                     position: absolute;
                     width: 48px;
@@ -45,38 +46,40 @@
                     z-index: 10;
                 `;
 
-                const randomY = Math.random() * 60 + 20;
-                coin.style.right = '0px';
-                coin.style.top = randomY + '%';
+                const randomX = Math.random() * (window.innerWidth - 48);
+                coin.style.left = randomX + 'px';
+                coin.style.top = '-48px';
 
                 document.body.appendChild(coin);
 
                 return {
                     element: coin,
-                    x: window.innerWidth,
-                    y: (randomY / 100) * window.innerHeight,
-                    collected: false
+                    x: randomX,
+                    y: -48,
+                    collected: false,
+                    isRedCoin: isRedCoin
                 };
             }
 
             function gameLoop() {
-                const meepleRect = meepleDisplay.getBoundingClientRect();
-                const currentY = parseFloat(meepleDisplay.style.top) || groundY;
+                if (gameOver) return;
+
                 const currentTime = Date.now();
 
                 if (currentTime - lastCoinSpawn > coinSpawnInterval) {
                     coins.push(createCoin());
+                    coins.push(createCoin()); // 2x more coins
                     lastCoinSpawn = currentTime;
                 }
 
                 for (let i = coins.length - 1; i >= 0; i--) {
                     const coin = coins[i];
-
-                    coin.x -= coinSpeed;
-
-                    coin.element.style.right = (window.innerWidth - coin.x) + 'px';
+                    coin.y += coinFallSpeed;
+                    coin.element.style.top = coin.y + 'px';
 
                     const coinRect = coin.element.getBoundingClientRect();
+                    const meepleRect = meeple.getBoundingClientRect();
+
                     if (!coin.collected &&
                         coinRect.right >= meepleRect.left &&
                         coinRect.left <= meepleRect.right &&
@@ -86,31 +89,21 @@
                         coin.collected = true;
                         coin.element.remove();
                         coins.splice(i, 1);
+
+                        if (coin.isRedCoin) {
+                            gameOver = true;
+                            showGameOver('You collected a red coin! Game Over!');
+                        } else {
+                            collectedCoins++;
+                            document.getElementById('coin-count').textContent = collectedCoins;
+
+                            const currentTotal = parseInt(localStorage.getItem('totalCoins') || '0');
+                            localStorage.setItem('totalCoins', (currentTotal + 1).toString());
+                        }
                     }
-                    else if (coin.x < -50) {
+                    else if (coin.y > window.innerHeight) {
                         coin.element.remove();
                         coins.splice(i, 1);
-                    }
-                }
-
-                if (isChargingJump && !isJumping) {
-                    jumpCharge += 0.7;
-                    if (jumpCharge > maxJumpCharge) {
-                        jumpCharge = maxJumpCharge;
-                    }
-                }
-
-                if (isJumping || currentY < groundY) {
-                    velocityY += gravity;
-                    const newY = currentY + velocityY;
-
-                    if (newY >= groundY) {
-                        meepleDisplay.style.top = groundY + '%';
-                        velocityY = 0;
-                        isJumping = false;
-                        jumpCharge = 0;
-                    } else {
-                        meepleDisplay.style.top = newY + '%';
                     }
                 }
 
@@ -119,51 +112,87 @@
 
             gameLoop();
 
-            function startJumpCharge() {
-                if (!isJumping) {
-                    isChargingJump = true;
-                    jumpCharge = 0;
-                }
+            function moveMeeple(targetX) {
+                meeple.style.left = (targetX - meeple.offsetWidth / 2) + 'px';
             }
 
-            function releaseJump() {
-                if (isChargingJump && !isJumping) {
-                    const chargeMultiplier = Math.min(jumpCharge / maxJumpCharge, 1);
-                    const jumpVelocity = -2.5 - (chargeMultiplier * 2.5);
-                    velocityY = jumpVelocity;
-                    isJumping = true;
-                    isChargingJump = false;
-                }
+            function showGameOver(message) {
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.8);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 1000;
+                    font-family: 'Fredoka One', cursive;
+                `;
+
+                const modalContent = document.createElement('div');
+                modalContent.style.cssText = `
+                    background: rgba(255, 255, 255, 0.95);
+                    padding: 2rem;
+                    border-radius: 20px;
+                    text-align: center;
+                    max-width: 400px;
+                    width: 90%;
+                `;
+
+                modalContent.innerHTML = `
+                    <h2 style="color: #333; margin-bottom: 1rem;">Game Over!</h2>
+                    <p style="color: #666; margin-bottom: 1rem;">${message}</p>
+                    <p style="color: #666; margin-bottom: 1rem;">Coins collected this round: <strong>${collectedCoins}</strong></p>
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <button id="restart-btn" style="
+                            background: #4CAF50;
+                            color: white;
+                            border: none;
+                            padding: 1rem 2rem;
+                            border-radius: 10px;
+                            font-size: 1.2rem;
+                            cursor: pointer;
+                            font-family: inherit;
+                        ">Play Again</button>
+                        <button id="hub-btn" style="
+                            background: #2196F3;
+                            color: white;
+                            border: none;
+                            padding: 1rem 2rem;
+                            border-radius: 10px;
+                            font-size: 1.2rem;
+                            cursor: pointer;
+                            font-family: inherit;
+                        ">Return to Hub</button>
+                    </div>
+                `;
+
+                modal.appendChild(modalContent);
+                document.body.appendChild(modal);
+
+                document.getElementById('restart-btn').addEventListener('click', function() {
+                    location.reload();
+                });
+
+                document.getElementById('hub-btn').addEventListener('click', function() {
+                    window.location.href = '/play.html';
+                });
             }
 
-            document.addEventListener('keydown', function(event) {
-                if (event.code === 'Space') {
-                    event.preventDefault();
-                    startJumpCharge();
+            document.addEventListener('click', function(event) {
+                if (!gameOver) {
+                    moveMeeple(event.clientX);
                 }
-            });
-
-            document.addEventListener('keyup', function(event) {
-                if (event.code === 'Space') {
-                    releaseJump();
-                }
-            });
-
-            document.addEventListener('mousedown', function(event) {
-                startJumpCharge();
-            });
-
-            document.addEventListener('mouseup', function(event) {
-                releaseJump();
             });
         });
     </script>
-    <div style="position: relative; min-height: 100vh; padding: 2rem;">
-        <img id="player-meeple-display" src="/static/meeple-blue.png" alt="Your Meeple" style="position: absolute; left: 2rem; top: 65%; transform: translateY(-50%); width: 256px; height: 256px; image-rendering: pixelated;">
-
-        <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; text-align: center;">
-            <div>
-        </div>
+    <div id="coin-counter" style="position: absolute; top: 2rem; right: 2rem; display: flex; align-items: center; gap: 0.5rem; background: rgba(0,0,0,0.7); padding: 0.5rem 1rem; border-radius: 10px; color: white; font-size: 1.5rem; z-index: 100; font-family: 'Fredoka One', cursive;">
+        <img src="/static/coin.png" alt="Coin" style="width: 32px; height: 32px; image-rendering: pixelated;">
+        <span id="coin-count">0</span>
     </div>
+    <img id="player-meeple-display" src="/static/meeple-blue.png" alt="Your Meeple" style="position: absolute; width: 256px; height: 256px; image-rendering: pixelated;">
 </body>
 </html>
