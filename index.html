@@ -11,7 +11,7 @@ body{background:url(/static/background.png)center/cover fixed;margin:0;padding:2
 </style>
 
 <div class="flex items-center justify-center gap-5 mx-auto my-12 p-8 max-w-2xl">
-    <img id="meeple-image" src="/static/meeple-blue.png" alt="Meeple" class="w-32 drop-shadow-lg">
+    <img id="meeple-image" src="/static/meeple-blue.png" alt="Meeple" class="w-16 drop-shadow-lg">
     <div class="text-left"><h1 class="text-5xl font-normal text-white m-0 tracking-tight">Meeple</h1><h2 class="text-2xl font-normal text-white m-0 tracking-wider">Quest</h2></div>
 </div>
 
@@ -34,8 +34,8 @@ body{background:url(/static/background.png)center/cover fixed;margin:0;padding:2
 </div>
 
 <script>
-function selectColor(c){document.getElementById('meeple-image').src=`/static/meeple-${c}.png`;document.querySelectorAll('.color-option').forEach(o=>{o.classList.toggle('active',o.dataset.color===c)})}
+function selectColor(c){document.getElementById('meeple-image').src=`/static/meeple-${c}.png`;document.querySelectorAll('.color-option').forEach(o=>{o.classList.toggle('active',o.dataset.color===c)});localStorage.setItem('selectedMeepleColor', c)}
 function updateGreeting(){const n=document.getElementById('player-name'),g=document.getElementById('greeting'),b=document.getElementById('start-btn'),h=document.getElementById('name-header'),c=document.getElementById('input-container');const hasContent=n.value.trim()!=='';[g.style.opacity,b.style.opacity,h.style.opacity]=hasContent?['1','1','0']:['0','0','1'];c.style.transform=hasContent?'translateY(-24px)':'translateY(0)';g.textContent=hasContent?`Welcome to MeepleQuest, ${n.value.trim()}!`:''}
-function startQuest(){alert('Quest')}
+function startQuest(){window.location.href='/play.html'}
 document.addEventListener('DOMContentLoaded',()=>document.getElementById('player-name').addEventListener('input',updateGreeting));
 </script>

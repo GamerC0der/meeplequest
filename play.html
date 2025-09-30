@@ -1,0 +1,99 @@
+<style>
+body {
+    background: url(/static/grass.png) center/cover fixed;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    position: relative;
+}
+</style>
+
+<img id="player-meeple" src="/static/meeple-blue.png" alt="Player Meeple" style="width: 256px; height: 256px; position: absolute; cursor: pointer; image-rendering: pixelated;">
+<img id="arcade" src="/static/arcade.png" alt="Arcade" style="width: 200px; height: auto; position: absolute; pointer-events: none;">
+<div id="pixel-art-text" style="position: absolute; color: white; font-family: 'Fredoka One', cursive; font-size: 24px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); pointer-events: none; opacity: 0; transition: opacity 0.3s ease-in-out;">!</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const selectedColor = localStorage.getItem('selectedMeepleColor') || 'blue';
+    const meeple = document.getElementById('player-meeple');
+    const arcade = document.getElementById('arcade');
+
+    meeple.src = `/static/meeple-${selectedColor}.png`;
+    meeple.style.left = '50%';
+    meeple.style.top = '50%';
+    meeple.style.transform = 'translate(-50%, -50%)';
+
+    arcade.style.left = 'calc(50% + 100px + 25%)';
+    arcade.style.top = '50%';
+    arcade.style.transform = 'translate(-50%, -50%)';
+
+    setTimeout(checkProximity, 100);
+
+    const pixelsPerSecond = 600;
+    const pixelArtText = document.getElementById('pixel-art-text');
+    let hasEnteredArcade = false;
+
+    function checkProximity() {
+        const meepleRect = meeple.getBoundingClientRect();
+        const arcadeRect = arcade.getBoundingClientRect();
+
+        const isOverlapping = !(meepleRect.right < arcadeRect.left ||
+                               meepleRect.left > arcadeRect.right ||
+                               meepleRect.bottom < arcadeRect.top ||
+                               meepleRect.top > arcadeRect.bottom);
+
+        if (isOverlapping && !hasEnteredArcade) {
+            hasEnteredArcade = true;
+            window.location.href = '/arcade-1.html';
+            return;
+        }
+
+        const meepleCenterX = meepleRect.left + meepleRect.width / 2;
+        const meepleCenterY = meepleRect.top + meepleRect.height / 2;
+        const arcadeCenterX = arcadeRect.left + arcadeRect.width / 2;
+        const arcadeCenterY = arcadeRect.top + arcadeRect.height / 2;
+
+        const distance = Math.sqrt(
+            Math.pow(meepleCenterX - arcadeCenterX, 2) +
+            Math.pow(meepleCenterY - arcadeCenterY, 2)
+        );
+
+        if (distance < 150 && !hasEnteredArcade) {
+            pixelArtText.style.opacity = '1';
+            pixelArtText.style.left = arcadeCenterX + 'px';
+            pixelArtText.style.top = (arcadeRect.top - 40) + 'px';
+            pixelArtText.style.transform = 'translateX(-50%)';
+        } else {
+            pixelArtText.style.opacity = '0';
+        }
+    }
+
+    function moveMeeple(targetX, targetY) {
+        const rect = meeple.getBoundingClientRect();
+        const currentX = rect.left;
+        const currentY = rect.top;
+        const distance = Math.sqrt(Math.pow(targetX - currentX, 2) + Math.pow(targetY - currentY, 2));
+        const duration = distance / pixelsPerSecond;
+        meeple.style.transition = `all ${duration}s ease-in-out`;
+        meeple.style.left = targetX + 'px';
+        meeple.style.top = targetY + 'px';
+        meeple.style.transform = 'none';
+
+        setTimeout(checkProximity, duration * 1000);
+    }
+
+    document.addEventListener('click', function(event) {
+        const rect = meeple.getBoundingClientRect();
+        const arcadeRect = arcade.getBoundingClientRect();
+        let targetX = event.clientX - 128;
+        let targetY = event.clientY - 128;
+
+
+        moveMeeple(targetX, targetY);
+    });
+
+});
+</script>

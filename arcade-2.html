@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: url(/static/minigame_1.png) center/cover;
+            margin: 0; padding: 0; min-height: 100vh;
+            font-family: 'Fredoka One', cursive;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectedColor = localStorage.getItem('selectedMeepleColor') || 'blue';
+            const meepleDisplay = document.getElementById('player-meeple-display');
+            meepleDisplay.src = `/static/meeple-${selectedColor}.png`;
+
+            let velocityY = 0;
+            let gravity = 0.3;
+            let groundY = 65;
+            let isJumping = false;
+            let jumpCharge = 0;
+            let maxJumpCharge = 8;
+            let isChargingJump = false;
+
+            let coins = [];
+            let coinSpeed = 4;
+            let lastCoinSpawn = 0;
+            let coinSpawnInterval = 2000; 
+
+            function createCoin() {
+                const coin = document.createElement('img');
+                coin.src = '/static/coin.png';
+                coin.className = 'coin';
+                coin.style.cssText = `
+                    position: absolute;
+                    width: 48px;
+                    height: 48px;
+                    image-rendering: pixelated;
+                    pointer-events: none;
+                    z-index: 10;
+                `;
+
+                const randomY = Math.random() * 60 + 20;
+                coin.style.right = '0px';
+                coin.style.top = randomY + '%';
+
+                document.body.appendChild(coin);
+
+                return {
+                    element: coin,
+                    x: window.innerWidth,
+                    y: (randomY / 100) * window.innerHeight,
+                    collected: false
+                };
+            }
+
+            function gameLoop() {
+                const meepleRect = meepleDisplay.getBoundingClientRect();
+                const currentY = parseFloat(meepleDisplay.style.top) || groundY;
+                const currentTime = Date.now();
+
+                if (currentTime - lastCoinSpawn > coinSpawnInterval) {
+                    coins.push(createCoin());
+                    lastCoinSpawn = currentTime;
+                }
+
+                for (let i = coins.length - 1; i >= 0; i--) {
+                    const coin = coins[i];
+
+                    coin.x -= coinSpeed;
+
+                    coin.element.style.right = (window.innerWidth - coin.x) + 'px';
+
+                    const coinRect = coin.element.getBoundingClientRect();
+                    if (!coin.collected &&
+                        coinRect.right >= meepleRect.left &&
+                        coinRect.left <= meepleRect.right &&
+                        coinRect.bottom >= meepleRect.top &&
+                        coinRect.top <= meepleRect.bottom) {
+
+                        coin.collected = true;
+                        coin.element.remove();
+                        coins.splice(i, 1);
+                    }
+                    else if (coin.x < -50) {
+                        coin.element.remove();
+                        coins.splice(i, 1);
+                    }
+                }
+
+                if (isChargingJump && !isJumping) {
+                    jumpCharge += 0.7;
+                    if (jumpCharge > maxJumpCharge) {
+                        jumpCharge = maxJumpCharge;
+                    }
+                }
+
+                if (isJumping || currentY < groundY) {
+                    velocityY += gravity;
+                    const newY = currentY + velocityY;
+
+                    if (newY >= groundY) {
+                        meepleDisplay.style.top = groundY + '%';
+                        velocityY = 0;
+                        isJumping = false;
+                        jumpCharge = 0;
+                    } else {
+                        meepleDisplay.style.top = newY + '%';
+                    }
+                }
+
+                requestAnimationFrame(gameLoop);
+            }
+
+            gameLoop();
+
+            function startJumpCharge() {
+                if (!isJumping) {
+                    isChargingJump = true;
+                    jumpCharge = 0;
+                }
+            }
+
+            function releaseJump() {
+                if (isChargingJump && !isJumping) {
+                    const chargeMultiplier = Math.min(jumpCharge / maxJumpCharge, 1);
+                    const jumpVelocity = -2.5 - (chargeMultiplier * 2.5);
+                    velocityY = jumpVelocity;
+                    isJumping = true;
+                    isChargingJump = false;
+                }
+            }
+
+            document.addEventListener('keydown', function(event) {
+                if (event.code === 'Space') {
+                    event.preventDefault();
+                    startJumpCharge();
+                }
+            });
+
+            document.addEventListener('keyup', function(event) {
+                if (event.code === 'Space') {
+                    releaseJump();
+                }
+            });
+
+            document.addEventListener('mousedown', function(event) {
+                startJumpCharge();
+            });
+
+            document.addEventListener('mouseup', function(event) {
+                releaseJump();
+            });
+        });
+    </script>
+    <div style="position: relative; min-height: 100vh; padding: 2rem;">
+        <img id="player-meeple-display" src="/static/meeple-blue.png" alt="Your Meeple" style="position: absolute; left: 2rem; top: 65%; transform: translateY(-50%); width: 256px; height: 256px; image-rendering: pixelated;">
+
+        <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; text-align: center;">
+            <div>
+        </div>
+    </div>
+</body>
+</html>

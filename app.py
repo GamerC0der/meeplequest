@@ -5,7 +5,19 @@ app.template_folder = '.'
 
 @app.route('/')
 def hello():
-    return render_template('index.html')
+    return render_template('index.html')   
+
+@app.route('/play.html')
+def play():
+    return render_template('play.html')
+
+@app.route('/arcade-1.html')
+def arcade_1():
+    return render_template('arcade-1.html')
+
+@app.route('/arcade-2.html')
+def arcade_2():
+    return render_template('arcade-2.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
