@@ -68,7 +68,7 @@
 
                 if (currentTime - lastCoinSpawn > coinSpawnInterval) {
                     coins.push(createCoin());
-                    coins.push(createCoin()); // 2x more coins
+                    coins.push(createCoin()); 
                     lastCoinSpawn = currentTime;
                 }
 
@@ -117,6 +117,10 @@
             }
 
             function showGameOver(message) {
+                if (collectedCoins > 50 && !localStorage.getItem('crownEarned')) {
+                    localStorage.setItem('crownEarned', 'true');
+                }
+
                 const modal = document.createElement('div');
                 modal.style.cssText = `
                     position: fixed;
@@ -142,10 +146,16 @@
                     width: 90%;
                 `;
 
+                let crownMessage = '';
+                if (collectedCoins > 50 && !localStorage.getItem('crownEarned')) {
+                    crownMessage = '<p style="color: #FFD700; margin-bottom: 1rem; font-weight: bold;">🎉 You earned the Crown! 🎉</p>';
+                }
+
                 modalContent.innerHTML = `
                     <h2 style="color: #333; margin-bottom: 1rem;">Game Over!</h2>
                     <p style="color: #666; margin-bottom: 1rem;">${message}</p>
                     <p style="color: #666; margin-bottom: 1rem;">Coins collected this round: <strong>${collectedCoins}</strong></p>
+                    ${crownMessage}
                     <div style="display: flex; gap: 1rem; justify-content: center;">
                         <button id="restart-btn" style="
                             background: #4CAF50;
@@ -193,6 +203,6 @@
         <img src="/static/coin.png" alt="Coin" style="width: 32px; height: 32px; image-rendering: pixelated;">
         <span id="coin-count">0</span>
     </div>
-    <img id="player-meeple-display" src="/static/meeple-blue.png" alt="Your Meeple" style="position: absolute; width: 256px; height: 256px; image-rendering: pixelated;">
+    <img id="player-meeple-display" src="/static/meeple-blue.png" alt="Your Meeple" style="position: absolute; width: 512px; height: 512px; image-rendering: pixelated;">
 </body>
 </html>
