@@ -370,6 +370,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (isOverlapping && !hasEnteredLighthouse) {
             hasEnteredLighthouse = true;
+            localStorage.setItem('hasVisitedLighthouse', 'true');
             showLighthouseModal();
             return;
         }

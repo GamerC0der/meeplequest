@@ -36,6 +36,15 @@ body {
     }
 }
 
+@keyframes balloonsFloat {
+    0%, 100% {
+        transform: translate(-50%, -50%) translateY(0);
+    }
+    50% {
+        transform: translate(-50%, -50%) translateY(-5%);
+    }
+}
+
 @keyframes menuPopIn {
     from {
         opacity: 0;
@@ -87,6 +96,8 @@ body {
 
 <img id="player-meeple" src="/static/meeple-blue.png" alt="Player Meeple" style="width: 256px; height: 256px; position: absolute; cursor: pointer; image-rendering: pixelated;">
 <img id="equipped-hat" src="" alt="Equipped Hat" style="width: 64px; height: 64px; position: absolute; image-rendering: pixelated; display: none; pointer-events: none;">
+<img id="balloons" src="/static/ballons.png" alt="Balloons" style="width: 200px; height: auto; position: absolute; pointer-events: none; image-rendering: pixelated; z-index: 10;">
+<img id="balloons-bottom-right" src="/static/ballons.png" alt="Balloons" style="width: 150px; height: auto; position: absolute; pointer-events: none; image-rendering: pixelated; z-index: 10;">
 <img id="arcade" src="/static/arcade.png" alt="Arcade" style="width: 200px; height: auto; position: absolute; pointer-events: none;">
 <img id="collectible-coin" src="/static/coin.png" alt="Collectible Coin" style="width: 64px; height: 64px; position: absolute; left: 2rem; bottom: 2rem; image-rendering: pixelated; cursor: pointer;">
 <img id="market" src="/static/market.png" alt="Market" style="position: absolute; top: 68%; left: 25%; width: 375px; height: auto; image-rendering: pixelated; z-index: 50; cursor: pointer;">
@@ -129,6 +140,9 @@ body {
             </h2>
             <p style="color: #2F1B14; font-family: 'Times New Roman', serif; font-size: 0.9rem; line-height: 1.4; margin: 0; text-align: center; max-width: 400px;">
                 The siege has began, and we (us meeples!) are as great as ever. We come in four colors!
+            </p>
+            <p style="color: #8B4513; font-family: 'Times New Roman', serif; font-size: 0.85rem; line-height: 1.4; margin: 1rem 0 0 0; text-align: center; max-width: 400px; font-style: italic;">
+                To celebrate our return, we've added some balloons to celebrate!
             </p>
         </div>
 
@@ -205,7 +219,7 @@ body {
             <div class="market-tab" data-tab="news" style="background: rgba(139, 69, 19, 0.7); color: white; padding: 8px 16px; border-radius: 8px 8px 0 0; cursor: pointer; font-family: 'Georgia', serif; font-size: 0.9rem; font-weight: bold; border: 2px solid #8B4513; border-bottom: none;">NEWS</div>
         </div>
         <div id="shop-content" class="tab-content active">
-            <h1 style="color: #8B4513; font-family: 'Georgia', serif; font-size: 2.5rem; font-weight: bold; text-transform: uppercase; margin: 0 0 2rem 0; text-shadow: 3px 3px 6px rgba(0,0,0,0.9); -webkit-text-stroke: 1px #2F1B14;">SHOP</h1>
+            <h1 style="color: #8B4513; font-family: 'Georgia', serif; font-size: 2.5rem; font-weight: bold; text-transform: uppercase; margin: 0 0 2rem 0; text-align: center; text-shadow: 3px 3px 6px rgba(0,0,0,0.9); -webkit-text-stroke: 1px #2F1B14;">SHOP</h1>
             <div style="display: flex; flex-direction: column; gap: 1.5rem; align-items: center;">
                 <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.9); padding: 1rem; border-radius: 10px; width: 300px; justify-content: space-between;">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -257,7 +271,7 @@ body {
     <div style="background: url(/static/textbg.png) center/cover; width: 80%; height: 80%; max-width: 600px; max-height: 400px; border-radius: 20px; position: relative; image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
         <h1 style="color: #8B4513; font-family: 'Georgia', serif; font-size: 3rem; font-weight: bold; text-transform: uppercase; margin: 0 0 2rem 0; text-shadow: 3px 3px 6px rgba(0,0,0,0.9); -webkit-text-stroke: 1px #2F1B14;">ARCADE</h1>
         <button id="catch-it-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 1rem 2rem; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold; cursor: pointer; margin-bottom: 1rem;">Catch It</button>
-        <button id="fishing-frenzy-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 1rem 2rem; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold; cursor: pointer; margin-bottom: 2rem;">Fishing Frenzy</button>
+        <button id="fishing-frenzy-btn" style="background: rgba(139, 69, 19, 0.6); color: rgba(255,255,255,0.6); border: 2px solid rgba(139, 69, 19, 0.4); border-radius: 8px; padding: 1rem 2rem; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold; cursor: not-allowed; margin-bottom: 2rem; position: relative;">Fishing Frenzy 🔒</button>
         <button id="arcade-back-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 8px; padding: 0.75rem 1.5rem; font-family: 'Georgia', serif; font-size: 1rem; font-weight: bold; cursor: pointer;">Back</button>
     </div>
 </div>
@@ -352,6 +366,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function showArcadeModal() {
         arcadeModal.style.display = 'flex';
+
+        const hasVisitedLighthouse = localStorage.getItem('hasVisitedLighthouse') === 'true';
+        const fishingFrenzyBtn = document.getElementById('fishing-frenzy-btn');
+
+        if (hasVisitedLighthouse) {
+            fishingFrenzyBtn.style.background = 'rgba(0,0,0,0.8)';
+            fishingFrenzyBtn.style.color = 'white';
+            fishingFrenzyBtn.style.border = '2px solid #8B4513';
+            fishingFrenzyBtn.style.cursor = 'pointer';
+            fishingFrenzyBtn.textContent = 'Fishing Frenzy';
+        } else {
+            fishingFrenzyBtn.style.background = 'rgba(139, 69, 19, 0.6)';
+            fishingFrenzyBtn.style.color = 'rgba(255,255,255,0.6)';
+            fishingFrenzyBtn.style.border = '2px solid rgba(139, 69, 19, 0.4)';
+            fishingFrenzyBtn.style.cursor = 'not-allowed';
+            fishingFrenzyBtn.textContent = 'Fishing Frenzy 🔒';
+        }
     }
 
     const newsPage1 = document.getElementById('news-page-1');
@@ -378,6 +409,32 @@ document.addEventListener('DOMContentLoaded', function() {
     meeple.style.left = '50%';
     meeple.style.top = '50%';
     meeple.style.transform = 'translate(-50%, -50%)';
+
+    const balloons = document.getElementById('balloons');
+
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentDay = currentDate.getDate();
+    const isOctoberFirstTwoWeeks = currentMonth === 10 && currentDay >= 1 && currentDay <= 14;
+
+    if (isOctoberFirstTwoWeeks) {
+        balloons.style.left = '35%';
+        balloons.style.top = '55%';
+        balloons.style.transform = 'translate(-50%, -50%)';
+        balloons.style.animation = 'balloonsFloat 5s ease-in-out infinite';
+        balloons.style.display = 'block';
+
+        const balloonsBottomRight = document.getElementById('balloons-bottom-right');
+        balloonsBottomRight.style.right = '5%';
+        balloonsBottomRight.style.bottom = '10%';
+        balloonsBottomRight.style.transform = 'translate(50%, 50%)';
+        balloonsBottomRight.style.animation = 'balloonsFloat 5s ease-in-out infinite';
+        balloonsBottomRight.style.display = 'block';
+    } else {
+        balloons.style.display = 'none';
+        const balloonsBottomRight = document.getElementById('balloons-bottom-right');
+        balloonsBottomRight.style.display = 'none';
+    }
 
     setTimeout(() => {
         updateHatDisplay();
@@ -876,7 +933,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     fishingFrenzyBtn.addEventListener('click', function() {
-        window.location.href = '/fishing-frenzy-menu.html';
+        const hasVisitedLighthouse = localStorage.getItem('hasVisitedLighthouse') === 'true';
+        if (hasVisitedLighthouse) {
+            window.location.href = '/fishing-frenzy-menu.html';
+        }
     });
 
     arcadeBackBtn.addEventListener('click', function() {
