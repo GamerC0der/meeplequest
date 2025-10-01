@@ -8,6 +8,76 @@ body {
     image-rendering: crisp-edges;
     position: relative;
 }
+
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes itemFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes menuPopIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+#inventory-search:focus {
+    border-color: rgba(255,215,0,0.8) !important;
+}
+
+#inventory-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+#inventory-content::-webkit-scrollbar-track {
+    background: rgba(139,69,19,0.1);
+    border-radius: 4px;
+}
+
+#inventory-content::-webkit-scrollbar-thumb {
+    background: rgba(139,69,19,0.5);
+    border-radius: 4px;
+}
+
+#inventory-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(139,69,19,0.7);
+}
+
+.modal-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#map-btn:hover, #news-btn:hover {
+    transform: scale(1.2);
+    transition: transform 0.2s ease;
+}
+
 </style>
 
 <div id="coin-counter" style="position: fixed; top: 2rem; right: 2rem; display: flex; align-items: center; gap: 0.5rem; background: rgba(0,0,0,0.7); padding: 0.5rem 1rem; border-radius: 10px; color: white; font-size: 1.5rem; z-index: 100; font-family: 'Fredoka One', cursive;">
@@ -20,17 +90,22 @@ body {
 <img id="arcade" src="/static/arcade.png" alt="Arcade" style="width: 200px; height: auto; position: absolute; pointer-events: none;">
 <img id="collectible-coin" src="/static/coin.png" alt="Collectible Coin" style="width: 64px; height: 64px; position: absolute; left: 2rem; bottom: 2rem; image-rendering: pixelated; cursor: pointer;">
 <img id="market" src="/static/market.png" alt="Market" style="position: absolute; top: 68%; left: 25%; width: 375px; height: auto; image-rendering: pixelated; z-index: 50; cursor: pointer;">
+<button id="map-btn" style="position: fixed; right: 2rem; bottom: 6rem; background: rgba(0,0,0,0.7); border: 2px solid white; border-radius: 10px; padding: 0.5rem; cursor: pointer; z-index: 100;">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" fill="white"/>
+    </svg>
+</button>
 <button id="news-btn" style="position: fixed; right: 2rem; bottom: 2rem; background: rgba(0,0,0,0.7); border: 2px solid white; border-radius: 10px; padding: 0.5rem; cursor: pointer; z-index: 100;">
     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M19 3H5C3.89 3 3 3.89 3 5V19C3 20.11 3.89 21 5 21H19C20.11 21 21 20.11 21 19V5C21 3.89 20.11 3 19 3ZM19 19H5V5H19V19Z" fill="white"/>
         <path d="M7 7H17V9H7V7ZM7 11H17V13H7V11ZM7 15H13V17H7V15Z" fill="white"/>
     </svg>
 </button>
-<div id="news-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
+<div id="news-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;" class="modal-center">
     <div style="background: url(/static/textbg.png) center/cover; width: 80%; height: 80%; max-width: 800px; max-height: 600px; border-radius: 20px; position: relative; image-rendering: pixelated;">
         <div style="position: absolute; top: 2rem; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10;">
             <h1 style="color: #2F1B14; font-family: 'Georgia', 'Times New Roman', serif; font-size: 3rem; font-weight: bold; text-shadow: 3px 3px 6px rgba(0,0,0,0.9); margin: 0; text-transform: uppercase; letter-spacing: 0.15em; -webkit-text-stroke: 1px #8B4513;">THE SIEGE TIMES</h1>
-            <div style="color: #8B4513; font-family: 'Times New Roman', serif; font-size: 1.2rem; font-weight: bold; margin-top: 0.5rem;">Sep 29, 2025</div>
+            <div style="color: #8B4513; font-family: 'Times New Roman', serif; font-size: 1.2rem; font-weight: bold; margin-top: 0.5rem;">Sep 30, 2025</div>
         </div>
 
         <button id="prev-page-btn" style="position: absolute; top: 50%; left: 1rem; transform: translateY(-50%); background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; font-weight: bold; cursor: pointer; display: none; z-index: 15;">←</button>
@@ -39,6 +114,7 @@ body {
         <div style="position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.5rem; z-index: 15;">
             <div id="page-dot-1" style="width: 12px; height: 12px; border-radius: 50%; background: white; border: 2px solid #8B4513;"></div>
             <div id="page-dot-2" style="width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.5); border: 2px solid #8B4513;"></div>
+            <div id="page-dot-3" style="width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.5); border: 2px solid #8B4513;"></div>
         </div>
 
         <div id="news-page-1" style="position: absolute; bottom: 0; left: 0; right: 0; height: 50%; background: rgba(255,255,255,0.95); border-radius: 0 0 20px 20px; padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center;">
@@ -68,8 +144,26 @@ body {
             </p>
         </div>
 
+        <div id="news-page-3" style="position: absolute; bottom: 0; left: 0; right: 0; height: 50%; background: rgba(255,255,255,0.95); border-radius: 0 0 20px 20px; padding: 2rem; display: none; flex-direction: column; align-items: center; justify-content: center;">
+            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                <img src="/static/crown.png" alt="Crown" style="width: 60px; height: 60px; image-rendering: pixelated; margin-right: 1rem;">
+                <h2 style="color: #8B4513; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold; text-transform: uppercase; margin: 0;">
+                    Crown!
+                </h2>
+            </div>
+            <p style="color: #2F1B14; font-family: 'Times New Roman', serif; font-size: 0.9rem; line-height: 1.6; margin: 0; text-align: center; max-width: 400px;">
+                Orpheus, when he returned from the islands of the summer, found that if you get a score above 50 on Catch It, a special item may be given.
+            </p>
+        </div>
+
         <button id="close-modal-btn" style="position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; z-index: 20;">×</button>
     </div>
+</div>
+<div id="map-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
+    <img src="/static/map.png" alt="Map" style="width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated;">
+    <div id="market-text" style="position: absolute; top: 25%; left: 30%; color: white; font-family: 'Georgia', serif; font-size: 2.25rem; font-weight: bold; z-index: 15; cursor: pointer;">Market</div>
+    <div id="lighthouse-text" style="position: absolute; top: 15%; left: 34.5%; color: black; font-family: 'Georgia', serif; font-size: 2.25rem; font-weight: bold; z-index: 15; cursor: pointer;">Lighthouse</div>
+    <button id="close-map-modal-btn" style="position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; z-index: 20;">×</button>
 </div>
 <div id="player-menu" style="display: none; position: absolute; background: url(/static/textbg.png) center/cover; padding: 3rem; border-radius: 15px; image-rendering: pixelated; z-index: 200; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 200px;">
     <button id="close-player-menu-btn" style="position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 30px; height: 30px; font-size: 18px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive;">×</button>
@@ -83,62 +177,83 @@ body {
     </div>
 </div>
 
-<div id="inventory-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1200;">
-    <div style="background: url(/static/textbg.png) center/cover; width: 80%; height: 80%; max-width: 600px; max-height: 500px; border-radius: 20px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
-        <button id="close-inventory-modal-btn" style="position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; z-index: 20;">×</button>
-        <h1 style="color: #8B4513; font-family: 'Georgia', serif; font-size: 2.5rem; font-weight: bold; text-transform: uppercase; margin: 0 0 1rem 0; text-shadow: 3px 3px 6px rgba(0,0,0,0.9); -webkit-text-stroke: 1px #2F1B14;">INVENTORY</h1>
-        <input type="text" id="inventory-search" placeholder="Search inventory..." style="width: 80%; max-width: 300px; padding: 0.75rem; border: 2px solid #8B4513; border-radius: 8px; font-family: 'Georgia', serif; font-size: 1rem; background: rgba(255,255,255,0.9); color: #2F1B14; margin-bottom: 1rem;">
-        <div id="inventory-content" style="display: flex; flex-direction: column; gap: 1rem; align-items: center;">
+<div id="inventory-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(20,20,20,0.85) 100%); backdrop-filter: blur(8px); z-index: 1200; animation: modalFadeIn 0.3s ease-out;">
+    <div style="background: url(/static/textbg.png) center/cover; width: 90%; height: 85%; max-width: 800px; max-height: 650px; border-radius: 24px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; padding: 2.5rem; box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); border: 3px solid rgba(139,69,19,0.3); animation: modalSlideIn 0.4s ease-out 0.1s forwards;">
+        <button id="close-inventory-modal-btn" style="position: absolute; top: 1.5rem; right: 1.5rem; background: linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(30,30,30,0.9) 100%); color: white; border: 3px solid rgba(255,255,255,0.8); border-radius: 50%; width: 48px; height: 48px; font-size: 28px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; z-index: 20; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">&times;</button>
+        <h1 style="color: #FFD700; font-family: 'Georgia', serif; font-size: 3rem; font-weight: bold; text-transform: uppercase; margin: 0 0 1.5rem 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); -webkit-text-stroke: 1px #8B4513; letter-spacing: 1px;">INVENTORY</h1>
+        <div style="position: relative; width: 100%; max-width: 400px; margin-bottom: 2rem;">
+            <input type="text" id="inventory-search" placeholder="Search treasures..." style="width: 100%; padding: 1rem 1.5rem; padding-left: 3rem; border: 3px solid rgba(139,69,19,0.6); border-radius: 16px; font-family: 'Georgia', serif; font-size: 1.1rem; background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(250,250,250,0.95) 100%); color: #2F1B14; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.15); transition: all 0.3s ease; outline: none;">
+            <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #8B4513; font-size: 1.2rem;">&#128269;</div>
+        </div>
+        <div id="inventory-content" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1.5rem; width: 100%; max-height: 400px; overflow-y: auto; padding: 0.5rem; scrollbar-width: thin; scrollbar-color: rgba(139,69,19,0.5) transparent;">
 
         </div>
     </div>
 </div>
 
-<div id="item-menu" style="display: none; position: absolute; background: url(/static/textbg.png) center/cover; padding: 0.5rem; border-radius: 10px; image-rendering: pixelated; z-index: 1300; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-    <div style="display: flex; align-items: center; gap: 0.5rem;">
-        <button id="equip-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 6px; padding: 0.5rem 1rem; font-family: 'Georgia', serif; font-size: 0.9rem; font-weight: bold; cursor: pointer;">Equip</button>
-        <button id="close-item-menu-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 24px; height: 24px; font-size: 14px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive;">×</button>
+<div id="item-menu" style="display: none; position: absolute; background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,245,245,0.95) 100%); padding: 0.75rem; border-radius: 12px; border: 2px solid rgba(139,69,19,0.3); image-rendering: pixelated; z-index: 1300; box-shadow: 0 8px 25px rgba(0,0,0,0.3), 0 0 15px rgba(139,69,19,0.2); backdrop-filter: blur(10px);">
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <button id="equip-btn" style="background: linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(30,30,30,0.9) 100%); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 0.6rem 1.2rem; font-family: 'Georgia', serif; font-size: 0.9rem; font-weight: bold; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-transform: uppercase; letter-spacing: 0.5px;">Equip</button>
+        <button id="close-item-menu-btn" style="background: linear-gradient(135deg, rgba(139,69,19,0.8) 0%, rgba(101,67,33,0.8) 100%); color: white; border: 2px solid rgba(255,255,255,0.8); border-radius: 50%; width: 28px; height: 28px; font-size: 16px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; transition: all 0.2s ease; box-shadow: 0 3px 8px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center;">×</button>
     </div>
 </div>
 
 <div id="market-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
     <div style="background: url(/static/textbg.png) center/cover; width: 80%; height: 80%; max-width: 800px; max-height: 600px; border-radius: 20px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
-        <h1 style="color: #8B4513; font-family: 'Georgia', serif; font-size: 2.5rem; font-weight: bold; text-transform: uppercase; margin: 0 0 2rem 0; text-shadow: 3px 3px 6px rgba(0,0,0,0.9); -webkit-text-stroke: 1px #2F1B14;">MARKET</h1>
-        <div style="display: flex; flex-direction: column; gap: 1.5rem; align-items: center;">
-            <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.9); padding: 1rem; border-radius: 10px; width: 300px; justify-content: space-between;">
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <img src="/static/hat.png" alt="Hat" style="width: 48px; height: 48px; image-rendering: pixelated;">
-                    <span style="color: #2F1B14; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold;">Hat</span>
-                </div>
-                <div style="display: flex; align-items: center; gap: 1rem;">
+        <div id="market-tabs" style="position: absolute; top: -40px; left: 50%; transform: translateX(-50%); display: flex; gap: 2px; z-index: 60;">
+            <div class="market-tab active" data-tab="shop" style="background: rgba(139, 69, 19, 0.9); color: white; padding: 8px 16px; border-radius: 8px 8px 0 0; cursor: pointer; font-family: 'Georgia', serif; font-size: 0.9rem; font-weight: bold; border: 2px solid #8B4513; border-bottom: none;">SHOP</div>
+            <div class="market-tab" data-tab="news" style="background: rgba(139, 69, 19, 0.7); color: white; padding: 8px 16px; border-radius: 8px 8px 0 0; cursor: pointer; font-family: 'Georgia', serif; font-size: 0.9rem; font-weight: bold; border: 2px solid #8B4513; border-bottom: none;">NEWS</div>
+        </div>
+        <div id="shop-content" class="tab-content active">
+            <h1 style="color: #8B4513; font-family: 'Georgia', serif; font-size: 2.5rem; font-weight: bold; text-transform: uppercase; margin: 0 0 2rem 0; text-shadow: 3px 3px 6px rgba(0,0,0,0.9); -webkit-text-stroke: 1px #2F1B14;">SHOP</h1>
+            <div style="display: flex; flex-direction: column; gap: 1.5rem; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.9); padding: 1rem; border-radius: 10px; width: 300px; justify-content: space-between;">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <img src="/static/coin.png" alt="Coin" style="width: 24px; height: 24px; image-rendering: pixelated;">
-                        <span style="color: #8B4513; font-family: 'Georgia', serif; font-size: 1.2rem; font-weight: bold;">$100</span>
+                        <img src="/static/hat.png" alt="Hat" style="width: 48px; height: 48px; image-rendering: pixelated;">
+                        <span style="color: #2F1B14; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold;">Hat</span>
                     </div>
-                    <button id="hat-buy-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 0.5rem 1rem; font-family: 'Georgia', serif; font-size: 1rem; font-weight: bold; cursor: pointer;">Buy</button>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <img src="/static/coin.png" alt="Coin" style="width: 24px; height: 24px; image-rendering: pixelated;">
+                            <span style="color: #8B4513; font-family: 'Georgia', serif; font-size: 1.2rem; font-weight: bold;">$100</span>
+                        </div>
+                        <button id="hat-buy-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 0.5rem 1rem; font-family: 'Georgia', serif; font-size: 1rem; font-weight: bold; cursor: pointer;">Buy</button>
+                    </div>
                 </div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.9); padding: 1rem; border-radius: 10px; width: 300px; justify-content: space-between;">
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <img src="/static/pirate_hat.png" alt="Pirate Hat" style="width: 48px; height: 48px; image-rendering: pixelated;">
-                    <span style="color: #2F1B14; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold;">Pirate Hat</span>
-                </div>
-                <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.9); padding: 1rem; border-radius: 10px; width: 300px; justify-content: space-between;">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <img src="/static/coin.png" alt="Coin" style="width: 24px; height: 24px; image-rendering: pixelated;">
-                        <span style="color: #8B4513; font-family: 'Georgia', serif; font-size: 1.2rem; font-weight: bold;">$250</span>
+                        <img src="/static/pirate_hat.png" alt="Pirate Hat" style="width: 48px; height: 48px; image-rendering: pixelated;">
+                        <span style="color: #2F1B14; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold;">Pirate Hat</span>
                     </div>
-                    <button id="pirate-hat-buy-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 0.5rem 1rem; font-family: 'Georgia', serif; font-size: 1rem; font-weight: bold; cursor: pointer;">Buy</button>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <img src="/static/coin.png" alt="Coin" style="width: 24px; height: 24px; image-rendering: pixelated;">
+                            <span style="color: #8B4513; font-family: 'Georgia', serif; font-size: 1.2rem; font-weight: bold;">$250</span>
+                        </div>
+                        <button id="pirate-hat-buy-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 0.5rem 1rem; font-family: 'Georgia', serif; font-size: 1rem; font-weight: bold; cursor: pointer;">Buy</button>
+                    </div>
                 </div>
+                <p style="color: #2F1B14; font-family: 'Georgia', serif; font-size: 1rem; font-style: italic; margin: 1rem 0 0 0; text-align: center; max-width: 400px;">To see your inventory, please click on your player.</p>
             </div>
-            <p style="color: #2F1B14; font-family: 'Georgia', serif; font-size: 1rem; font-style: italic; margin: 1rem 0 0 0; text-align: center; max-width: 400px;">To see your inventory, please click on your player.</p>
+        </div>
+
+        <div id="news-content" class="tab-content" style="display: none;">
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+                <p style="color: #2F1B14; font-family: 'Georgia', serif; font-size: 1.5rem; text-align: center; margin: 0; padding: 2rem;">
+                    Click the button at the bottom right, then click the icon.
+                </p>
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-top: 1rem;">
+                    <path d="M19 3H5C3.89 3 3 3.89 3 5V19C3 20.11 3.89 21 5 21H19C20.11 21 21 20.11 21 19V5C21 3.89 20.11 3 19 3ZM19 19H5V5H19V19Z" fill="#2F1B14"/>
+                    <path d="M7 7H17V9H7V7ZM7 11H17V13H7V11ZM7 15H13V17H7V15Z" fill="#2F1B14"/>
+                </svg>
+            </div>
         </div>
         <button id="close-market-modal-btn" style="position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; z-index: 20;">×</button>
     </div>
 </div>
 <div id="pixel-art-text" style="position: absolute; color: white; font-family: 'Fredoka One', cursive; font-size: 24px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); pointer-events: none; opacity: 0; transition: opacity 0.3s ease-in-out;">!</div>
 
-<div id="arcade-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1500; justify-content: center; align-items: center;">
+<div id="arcade-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1500;" class="modal-center">
     <div style="background: url(/static/textbg.png) center/cover; width: 80%; height: 80%; max-width: 600px; max-height: 400px; border-radius: 20px; position: relative; image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
         <h1 style="color: #8B4513; font-family: 'Georgia', serif; font-size: 3rem; font-weight: bold; text-transform: uppercase; margin: 0 0 2rem 0; text-shadow: 3px 3px 6px rgba(0,0,0,0.9); -webkit-text-stroke: 1px #2F1B14;">ARCADE</h1>
         <button id="catch-it-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 1rem 2rem; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold; cursor: pointer; margin-bottom: 1rem;">Catch It</button>
@@ -147,7 +262,7 @@ body {
     </div>
 </div>
 
-<div id="crown-award-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1500; justify-content: center; align-items: center;">
+<div id="crown-award-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1500;" class="modal-center">
     <div style="background: url(/static/textbg.png) center/cover; width: 80%; height: 80%; max-width: 500px; max-height: 400px; border-radius: 20px; position: relative; image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
         <button id="close-crown-modal-btn" style="position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; z-index: 20;">×</button>
         <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
@@ -169,9 +284,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const newsBtn = document.getElementById('news-btn');
     const newsModal = document.getElementById('news-modal');
     const closeModalBtn = document.getElementById('close-modal-btn');
+    const mapBtn = document.getElementById('map-btn');
+    const mapModal = document.getElementById('map-modal');
     const marketImg = document.getElementById('market');
     const marketModal = document.getElementById('market-modal');
     const closeMarketModalBtn = document.getElementById('close-market-modal-btn');
+    const marketTabs = document.querySelectorAll('.market-tab');
     const playerMenu = document.getElementById('player-menu');
     const menuMeepleImg = document.getElementById('menu-meeple-img');
     const inventoryBtn = document.getElementById('inventory-btn');
@@ -234,16 +352,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function showArcadeModal() {
         arcadeModal.style.display = 'flex';
-        arcadeModal.style.justifyContent = 'center';
-        arcadeModal.style.alignItems = 'center';
     }
 
     const newsPage1 = document.getElementById('news-page-1');
     const newsPage2 = document.getElementById('news-page-2');
+    const newsPage3 = document.getElementById('news-page-3');
     const prevPageBtn = document.getElementById('prev-page-btn');
     const nextPageBtn = document.getElementById('next-page-btn');
     const pageDot1 = document.getElementById('page-dot-1');
     const pageDot2 = document.getElementById('page-dot-2');
+    const pageDot3 = document.getElementById('page-dot-3');
 
     let currentPage = 1;
 
@@ -270,8 +388,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (crownEarned && !crownAwardShown) {
         crownAwardModal.style.display = 'flex';
-        crownAwardModal.style.justifyContent = 'center';
-        crownAwardModal.style.alignItems = 'center';
         localStorage.setItem('crownAwardShown', 'true');
     }
 
@@ -486,13 +602,33 @@ document.addEventListener('DOMContentLoaded', function() {
     newsBtn.addEventListener('click', function(event) {
         event.stopPropagation();
         newsModal.style.display = 'flex';
-        newsModal.style.justifyContent = 'center';
-        newsModal.style.alignItems = 'center';
         showPage(1);
+    });
+
+    mapBtn.addEventListener('click', function(event) {
+        event.stopPropagation();
+        mapModal.style.display = 'flex';
+    });
+
+    const marketText = document.getElementById('market-text');
+    marketText.addEventListener('click', function(event) {
+        event.stopPropagation();
+        window.location.href = 'play.html';
+    });
+
+    const lighthouseText = document.getElementById('lighthouse-text');
+    lighthouseText.addEventListener('click', function(event) {
+        event.stopPropagation();
+        window.location.href = 'play-2.html';
     });
 
     closeModalBtn.addEventListener('click', function() {
         newsModal.style.display = 'none';
+    });
+
+    const closeMapModalBtn = document.getElementById('close-map-modal-btn');
+    closeMapModalBtn.addEventListener('click', function() {
+        mapModal.style.display = 'none';
     });
 
     newsModal.addEventListener('click', function(event) {
@@ -501,10 +637,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    mapModal.addEventListener('click', function(event) {
+        if (event.target === mapModal) {
+            mapModal.style.display = 'none';
+        }
+    });
+
     marketImg.addEventListener('click', function() {
         marketModal.style.display = 'flex';
-        marketModal.style.justifyContent = 'center';
-        marketModal.style.alignItems = 'center';
         updateMarketButtons();
     });
 
@@ -535,15 +675,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const items = [];
 
         if (hatPurchased) {
-            items.push({ name: 'Hat', img: '/static/hat.png' });
+            items.push({ name: 'Hat', img: '/static/hat.png', rarity: 'common' });
         }
 
         if (pirateHatPurchased) {
-            items.push({ name: 'Pirate Hat', img: '/static/pirate_hat.png' });
+            items.push({ name: 'Pirate Hat', img: '/static/pirate_hat.png', rarity: 'rare' });
         }
 
         if (crownEarned) {
-            items.push({ name: 'Crown', img: '/static/crown.png' });
+            items.push({ name: 'Crown', img: '/static/crown.png', rarity: 'legendary' });
         }
 
         const filteredItems = items.filter(item =>
@@ -551,23 +691,64 @@ document.addEventListener('DOMContentLoaded', function() {
         );
 
         if (filteredItems.length === 0) {
-            const noItems = document.createElement('span');
-            noItems.textContent = searchTerm ? 'No items match your search' : 'No items yet';
-            noItems.style.color = '#666';
-            noItems.style.fontStyle = 'italic';
-            noItems.style.fontSize = '0.9rem';
-            inventoryContent.appendChild(noItems);
+            const noItemsDiv = document.createElement('div');
+            noItemsDiv.style.gridColumn = '1 / -1';
+            noItemsDiv.style.textAlign = 'center';
+            noItemsDiv.style.padding = '3rem';
+            noItemsDiv.innerHTML = `
+                <div style="color: #8B4513; font-family: 'Georgia', serif; font-size: 1.2rem; font-style: italic; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">
+                    ${searchTerm ? 'No treasures match your search' : 'No treasures collected yet'}
+                </div>
+                <div style="color: #666; font-family: 'Georgia', serif; font-size: 0.9rem; margin-top: 0.5rem;">
+                    ${searchTerm ? 'Try a different search term' : 'Complete quests and games to earn items!'}
+                </div>
+            `;
+            inventoryContent.appendChild(noItemsDiv);
         } else {
-            filteredItems.forEach(item => {
+            filteredItems.forEach((item, index) => {
                 const itemDiv = document.createElement('div');
-                itemDiv.style.display = 'flex';
-                itemDiv.style.alignItems = 'center';
-                itemDiv.style.gap = '0.5rem';
-                itemDiv.style.background = 'rgba(255,255,255,0.9)';
-                itemDiv.style.padding = '0.5rem 0.75rem';
-                itemDiv.style.borderRadius = '6px';
+                const isEquipped = currentlyEquippedItem === item.name;
+                const rarityColors = {
+                    common: { bg: 'linear-gradient(135deg, rgba(220,220,220,0.9) 0%, rgba(200,200,200,0.9) 100%)', border: 'rgba(150,150,150,0.8)', glow: 'rgba(150,150,150,0.3)' },
+                    rare: { bg: 'linear-gradient(135deg, rgba(220,220,220,0.9) 0%, rgba(200,200,200,0.9) 100%)', border: 'rgba(150,150,150,0.8)', glow: 'rgba(150,150,150,0.3)' },
+                    legendary: { bg: 'linear-gradient(135deg, rgba(220,220,220,0.9) 0%, rgba(200,200,200,0.9) 100%)', border: 'rgba(150,150,150,0.8)', glow: 'rgba(150,150,150,0.3)' }
+                };
+                const colors = rarityColors[item.rarity] || rarityColors.common;
+
+                itemDiv.style.background = colors.bg;
+                itemDiv.style.border = `3px solid ${colors.border}`;
+                itemDiv.style.borderRadius = '16px';
+                itemDiv.style.padding = '1.5rem 1rem';
                 itemDiv.style.cursor = 'pointer';
-                itemDiv.innerHTML = `<img src="${item.img}" alt="${item.name}" style="width: 24px; height: 24px; image-rendering: pixelated;"><span style="color: #2F1B14; font-family: 'Georgia', serif; font-size: 0.9rem; font-weight: bold;">${item.name}</span>`;
+                itemDiv.style.boxShadow = isEquipped ? `0 0 15px ${colors.glow}, 0 4px 12px rgba(0,0,0,0.2)` : '0 4px 12px rgba(0,0,0,0.2)';
+                itemDiv.style.position = 'relative';
+                itemDiv.style.overflow = 'hidden';
+                itemDiv.style.animation = `itemFadeIn 0.3s ease-out ${index * 0.05}s both`;
+
+                if (isEquipped) {
+                    itemDiv.style.borderColor = '#FFD700';
+                    itemDiv.innerHTML = `
+                        <div style="position: absolute; top: 8px; right: 8px; background: #FFD700; color: #8B4513; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">✓</div>
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
+                            <img src="${item.img}" alt="${item.name}" style="width: 64px; height: 64px; image-rendering: pixelated; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
+                            <div style="text-align: center;">
+                                <div style="color: #2F1B14; font-family: 'Georgia', serif; font-size: 1rem; font-weight: bold; margin-bottom: 0.25rem;">${item.name}</div>
+                                <div style="color: #FFD700; font-family: 'Georgia', serif; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Equipped</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    itemDiv.innerHTML = `
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
+                            <img src="${item.img}" alt="${item.name}" style="width: 64px; height: 64px; image-rendering: pixelated; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
+                            <div style="text-align: center;">
+                                <div style="color: #2F1B14; font-family: 'Georgia', serif; font-size: 1rem; font-weight: bold;">${item.name}</div>
+                                <div style="color: ${colors.border}; font-family: 'Georgia', serif; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.25rem;">${item.rarity}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+
 
                 itemDiv.addEventListener('click', function(event) {
                     event.stopPropagation();
@@ -576,20 +757,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     const rect = itemDiv.getBoundingClientRect();
                     const modalRect = inventoryModal.getBoundingClientRect();
 
-                    itemMenu.style.left = (rect.left - modalRect.left + rect.width + 10) + 'px';
-                    itemMenu.style.top = (rect.top - modalRect.top) + 'px';
+                    itemMenu.style.left = (rect.left - modalRect.left + rect.width / 2 - 75) + 'px';
+                    itemMenu.style.top = (rect.top - modalRect.top - 60) + 'px';
 
                     if (currentlyEquippedItem === item.name) {
                         equipBtn.textContent = 'Unequip';
-                        equipBtn.style.background = 'rgba(139,69,19,0.8)';
+                        equipBtn.style.background = 'linear-gradient(135deg, rgba(139,69,19,0.9) 0%, rgba(101,67,33,0.9) 100%)';
                         equipBtn.style.borderColor = '#654321';
+                        equipBtn.style.boxShadow = '0 4px 12px rgba(139,69,19,0.4)';
                     } else {
                         equipBtn.textContent = 'Equip';
-                        equipBtn.style.background = 'rgba(0,0,0,0.8)';
+                        equipBtn.style.background = 'linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(30,30,30,0.9) 100%)';
                         equipBtn.style.borderColor = '#8B4513';
+                        equipBtn.style.boxShadow = '0 4px 12px rgba(0,0,0,0.4)';
                     }
 
                     itemMenu.style.display = 'block';
+                    itemMenu.style.animation = 'menuPopIn 0.2s ease-out';
                 });
 
                 inventoryContent.appendChild(itemDiv);
@@ -600,8 +784,6 @@ document.addEventListener('DOMContentLoaded', function() {
     inventoryBtn.addEventListener('click', function() {
         updateInventoryDisplay();
         inventoryModal.style.display = 'flex';
-        inventoryModal.style.justifyContent = 'center';
-        inventoryModal.style.alignItems = 'center';
     });
 
     meeple.addEventListener('click', function(event) {
@@ -619,6 +801,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
     closeMarketModalBtn.addEventListener('click', function() {
         marketModal.style.display = 'none';
+    });
+
+    marketTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const tabType = this.getAttribute('data-tab');
+
+            marketTabs.forEach(t => {
+                t.classList.remove('active');
+                t.style.background = 'rgba(139, 69, 19, 0.7)';
+            });
+            this.classList.add('active');
+            this.style.background = 'rgba(139, 69, 19, 0.9)';
+
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.style.display = 'none';
+                content.classList.remove('active');
+            });
+
+            const activeContent = document.getElementById(tabType + '-content');
+            if (activeContent) {
+                activeContent.style.display = 'flex';
+                activeContent.classList.add('active');
+            }
+        });
     });
 
     closePlayerMenuBtn.addEventListener('click', function() {
@@ -669,7 +876,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     fishingFrenzyBtn.addEventListener('click', function() {
-        window.location.href = '/fishing-frenzy.html';
+        window.location.href = '/fishing-frenzy-menu.html';
     });
 
     arcadeBackBtn.addEventListener('click', function() {
@@ -709,22 +916,35 @@ document.addEventListener('DOMContentLoaded', function() {
         if (pageNum === 1) {
             newsPage1.style.display = 'flex';
             newsPage2.style.display = 'none';
+            newsPage3.style.display = 'none';
             prevPageBtn.style.display = 'none';
             nextPageBtn.style.display = 'block';
             pageDot1.style.background = 'white';
             pageDot2.style.background = 'rgba(255,255,255,0.5)';
+            pageDot3.style.background = 'rgba(255,255,255,0.5)';
         } else if (pageNum === 2) {
             newsPage1.style.display = 'none';
             newsPage2.style.display = 'flex';
+            newsPage3.style.display = 'none';
+            prevPageBtn.style.display = 'block';
+            nextPageBtn.style.display = 'block';
+            pageDot1.style.background = 'rgba(255,255,255,0.5)';
+            pageDot2.style.background = 'white';
+            pageDot3.style.background = 'rgba(255,255,255,0.5)';
+        } else if (pageNum === 3) {
+            newsPage1.style.display = 'none';
+            newsPage2.style.display = 'none';
+            newsPage3.style.display = 'flex';
             prevPageBtn.style.display = 'block';
             nextPageBtn.style.display = 'none';
             pageDot1.style.background = 'rgba(255,255,255,0.5)';
-            pageDot2.style.background = 'white';
+            pageDot2.style.background = 'rgba(255,255,255,0.5)';
+            pageDot3.style.background = 'white';
         }
     }
 
     nextPageBtn.addEventListener('click', function() {
-        if (currentPage < 2) {
+        if (currentPage < 3) {
             showPage(currentPage + 1);
         }
     });

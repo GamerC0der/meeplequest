@@ -39,31 +39,159 @@
         document.getElementById('score').textContent = score;
         document.getElementById('time').textContent = time;
 
-        const fishEmojis = ['🐟', '🐠'];
+        class FishML {
+            constructor() {
+                this.qTable = {};
+                this.epsilon = 0.2;
+                this.alpha = 0.1;
+                this.gamma = 0.9;
+                this.actions = [-2, -1, 0, 1, 2];
+            }
+
+            getState(cursorX, cursorY, fishX, fishY, directionX, directionY) {
+                const distanceToCursor = Math.sqrt((cursorX - fishX) ** 2 + (cursorY - fishY) ** 2);
+                const distanceState = Math.min(Math.floor(distanceToCursor / 50), 5);
+                const directionState = Math.floor((Math.atan2(directionY, directionX) + Math.PI) / (Math.PI * 2) * 8);
+                const cursorDirection = Math.atan2(cursorY - fishY, cursorX - fishX);
+                const cursorState = Math.floor((cursorDirection + Math.PI) / (Math.PI * 2) * 4);
+                return `${distanceState}_${directionState}_${cursorState}`;
+            }
+
+            getAction(state) {
+                if (!this.qTable[state]) {
+                    this.qTable[state] = {};
+                    this.actions.forEach(action => {
+                        this.qTable[state][action] = Math.random() * 0.1;
+                    });
+                }
+
+                if (Math.random() < this.epsilon) {
+                    return this.actions[Math.floor(Math.random() * this.actions.length)];
+                }
+
+                let bestAction = this.actions[0];
+                let bestValue = this.qTable[state][bestAction];
+
+                for (const action of this.actions) {
+                    if ((this.qTable[state][action] || 0) > bestValue) {
+                        bestValue = this.qTable[state][action] || 0;
+                        bestAction = action;
+                    }
+                }
+
+                return bestAction;
+            }
+
+            learn(state, action, reward, nextState) {
+                if (!this.qTable[state]) this.qTable[state] = {};
+                if (!this.qTable[nextState]) this.qTable[nextState] = {};
+
+                const currentQ = this.qTable[state][action] || 0;
+                const maxNextQ = Math.max(...this.actions.map(a => this.qTable[nextState][a] || 0));
+
+                this.qTable[state][action] = currentQ + this.alpha * (reward + this.gamma * maxNextQ - currentQ);
+            }
+        }
+
         const fishes = [];
         for (let i = 0; i < fishCount; i++) {
-            const fish = document.createElement('div');
-            const isTrash = Math.random() < 0.1;
-            fish.textContent = isTrash ? '🗑️' : fishEmojis[Math.floor(Math.random() * fishEmojis.length)];
-            fish.style.cssText = 'position: absolute; font-size: 4rem; z-index: 10; pointer-events: none; user-select: none;';
+            const fish = document.createElement('img');
+            const isTrash = Math.random() < 0.15;
+            fish.src = isTrash ? '/static/trash.png' : (Math.random() < 0.5 ? '/static/fish.png' : '/static/red_fish.png');
+            fish.alt = isTrash ? 'Trash' : 'Fish';
+            fish.style.cssText = 'position: absolute; width: 128px; height: 128px; image-rendering: pixelated; z-index: 10; pointer-events: none; user-select: none;';
             document.body.appendChild(fish);
             fishes.push({
                 element: fish,
-                x: Math.random() * (window.innerWidth - 100) + 50,
-                y: Math.random() * (window.innerHeight - 100) + 50,
+                x: Math.random() * (window.innerWidth - 160) + 50,
+                y: Math.random() * (window.innerHeight - 160) + 50,
                 directionX: (Math.random() - 0.5) * 4,
                 directionY: (Math.random() - 0.5) * 4,
-                isTrash: isTrash
+                isTrash: isTrash,
+                ml: new FishML(),
+                lastState: null,
+                lastAction: null,
+                survivalTime: 0,
+                lastDecisionTime: Date.now()
             });
         }
 
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
         function moveFishes() {
             if (gameOver) return;
+
+            const currentTime = Date.now();
+
             fishes.forEach(fish => {
+                fish.survivalTime++;
+
+                if (currentTime - fish.lastDecisionTime > 500) {
+                    const currentState = fish.ml.getState(mouseX, mouseY, fish.x, fish.y, fish.directionX, fish.directionY);
+                    const action = fish.ml.getAction(currentState);
+
+                    if (fish.lastState !== null && fish.lastAction !== null) {
+                        let reward = fish.survivalTime * 0.01;
+
+                        const distanceToMouse = Math.sqrt((mouseX - fish.x) ** 2 + (mouseY - fish.y) ** 2);
+                        if (distanceToMouse < 100) {
+                            reward -= 0.5;
+                        } else if (distanceToMouse > 200) {
+                            reward += 0.2;
+                        }
+
+                        const trashObjects = fishes.filter(f => f.isTrash && f !== fish);
+                        let minDistanceToTrash = Infinity;
+                        trashObjects.forEach(trash => {
+                            const distanceToTrash = Math.sqrt((trash.x - fish.x) ** 2 + (trash.y - fish.y) ** 2);
+                            minDistanceToTrash = Math.min(minDistanceToTrash, distanceToTrash);
+                        });
+
+                        if (minDistanceToTrash < 150) {
+                            reward -= 0.8;
+                        } else if (minDistanceToTrash > 250) {
+                            reward += 0.1;
+                        }
+
+                        fish.ml.learn(fish.lastState, fish.lastAction, reward, currentState);
+                    }
+
+                    fish.lastState = currentState;
+                    fish.lastAction = action;
+                    fish.lastDecisionTime = currentTime;
+
+                    const angle = Math.atan2(fish.directionY, fish.directionX);
+                    const newAngle = angle + (action * Math.PI / 8);
+                    const speed = Math.sqrt(fish.directionX ** 2 + fish.directionY ** 2);
+
+                    fish.directionX = Math.cos(newAngle) * speed;
+                    fish.directionY = Math.sin(newAngle) * speed;
+                }
+
                 fish.x += fish.directionX;
                 fish.y += fish.directionY;
-                if (fish.x <= 0 || fish.x >= window.innerWidth - 50) fish.directionX *= -1;
-                if (fish.y <= 0 || fish.y >= window.innerHeight - 50) fish.directionY *= -1;
+
+                if (fish.x <= 0 || fish.x >= window.innerWidth - 128) {
+                    fish.directionX *= -1;
+                    if (fish.lastState && fish.lastAction) {
+                        const currentState = fish.ml.getState(mouseX, mouseY, fish.x, fish.y, fish.directionX, fish.directionY);
+                        fish.ml.learn(fish.lastState, fish.lastAction, -0.3, currentState);
+                    }
+                }
+                if (fish.y <= 0 || fish.y >= window.innerHeight - 128) {
+                    fish.directionY *= -1;
+                    if (fish.lastState && fish.lastAction) {
+                        const currentState = fish.ml.getState(mouseX, mouseY, fish.x, fish.y, fish.directionX, fish.directionY);
+                        fish.ml.learn(fish.lastState, fish.lastAction, -0.3, currentState);
+                    }
+                }
+
                 fish.element.style.left = fish.x + 'px';
                 fish.element.style.top = fish.y + 'px';
             });
@@ -112,12 +240,15 @@
                         } else {
                             score++;
                             document.getElementById('score').textContent = score;
-                            fish.element.textContent = fishEmojis[Math.floor(Math.random() * fishEmojis.length)];
                         }
-                        fish.x = Math.random() * (window.innerWidth - 100) + 50;
-                        fish.y = Math.random() * (window.innerHeight - 100) + 50;
+                        fish.x = Math.random() * (window.innerWidth - 160) + 50;
+                        fish.y = Math.random() * (window.innerHeight - 160) + 50;
                         fish.directionX = (Math.random() - 0.5) * 4;
                         fish.directionY = (Math.random() - 0.5) * 4;
+                        fish.lastState = null;
+                        fish.lastAction = null;
+                        fish.survivalTime = 0;
+                        fish.lastDecisionTime = Date.now();
                     }
                 });
             }

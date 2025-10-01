@@ -199,6 +199,7 @@
         <div class="page-dots">
             <div id="page-dot-1" class="page-dot" style="background: white;"></div>
             <div id="page-dot-2" class="page-dot" style="background: rgba(255,255,255,0.5);"></div>
+            <div id="page-dot-3" class="page-dot" style="background: rgba(255,255,255,0.5);"></div>
         </div>
 
         <div id="news-page-1" class="news-page">
@@ -226,6 +227,16 @@
             </p>
         </div>
 
+        <div id="news-page-3" class="news-page news-page-2">
+            <div class="coin-section">
+                <img src="/static/crown.png" alt="Crown" class="coin-icon">
+                <h2 class="coin-title">Crown!</h2>
+            </div>
+            <p class="page-content">
+                Orpheus, when he returned from the islands of the summer, found that if you get a score above 50 on Catch It, a special item may be given.
+            </p>
+        </div>
+
         <button id="close-modal-btn" class="close-btn">×</button>
     </div>
 
@@ -233,10 +244,12 @@
         let currentPage = 1;
         const newsPage1 = document.getElementById('news-page-1');
         const newsPage2 = document.getElementById('news-page-2');
+        const newsPage3 = document.getElementById('news-page-3');
         const prevPageBtn = document.getElementById('prev-page-btn');
         const nextPageBtn = document.getElementById('next-page-btn');
         const pageDot1 = document.getElementById('page-dot-1');
         const pageDot2 = document.getElementById('page-dot-2');
+        const pageDot3 = document.getElementById('page-dot-3');
         const closeModalBtn = document.getElementById('close-modal-btn');
 
         function showPage(pageNum) {
@@ -245,22 +258,35 @@
             if (pageNum === 1) {
                 newsPage1.style.display = 'flex';
                 newsPage2.style.display = 'none';
+                newsPage3.style.display = 'none';
                 prevPageBtn.style.display = 'none';
                 nextPageBtn.style.display = 'block';
                 pageDot1.style.background = 'white';
                 pageDot2.style.background = 'rgba(255,255,255,0.5)';
+                pageDot3.style.background = 'rgba(255,255,255,0.5)';
             } else if (pageNum === 2) {
                 newsPage1.style.display = 'none';
                 newsPage2.style.display = 'flex';
+                newsPage3.style.display = 'none';
+                prevPageBtn.style.display = 'block';
+                nextPageBtn.style.display = 'block';
+                pageDot1.style.background = 'rgba(255,255,255,0.5)';
+                pageDot2.style.background = 'white';
+                pageDot3.style.background = 'rgba(255,255,255,0.5)';
+            } else if (pageNum === 3) {
+                newsPage1.style.display = 'none';
+                newsPage2.style.display = 'none';
+                newsPage3.style.display = 'flex';
                 prevPageBtn.style.display = 'block';
                 nextPageBtn.style.display = 'none';
                 pageDot1.style.background = 'rgba(255,255,255,0.5)';
-                pageDot2.style.background = 'white';
+                pageDot2.style.background = 'rgba(255,255,255,0.5)';
+                pageDot3.style.background = 'white';
             }
         }
 
         nextPageBtn.addEventListener('click', function() {
-            if (currentPage < 2) {
+            if (currentPage < 3) {
                 showPage(currentPage + 1);
             }
         });
@@ -272,20 +298,17 @@
         });
 
         closeModalBtn.addEventListener('click', function() {
-            // Communicate with parent window to close the modal
             if (window.parent) {
                 window.parent.postMessage({ action: 'closeModal' }, '*');
             }
         });
 
-        // Listen for messages from parent window
         window.addEventListener('message', function(event) {
             if (event.data.action === 'showModal') {
                 showPage(1);
             }
         });
 
-        // Auto-show modal when page loads (for iframe usage)
         showPage(1);
     </script>
 </body>

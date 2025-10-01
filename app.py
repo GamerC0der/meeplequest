@@ -23,6 +23,10 @@ def modal():
 def fishing_frenzy():
     return render_template('fishing-frenzy.html')
 
+@app.route('/fishing-frenzy-menu.html')
+def fishing_frenzy_menu():
+    return render_template('fishing-frenzy-menu.html')
+
 @app.route('/arcade-1.html')
 def arcade_1():
     return render_template('arcade-1.html')
