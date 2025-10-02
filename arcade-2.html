@@ -3,52 +3,149 @@
 <head>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --modal-bg: rgba(255, 255, 255, 0.95);
+            --modal-text: #333;
+            --modal-text-secondary: #666;
+            --modal-button-bg: #4CAF50;
+            --modal-button-secondary: #2196F3;
+            --coin-counter-bg: rgba(0,0,0,0.7);
+        }
+
+        .dark-mode {
+            --modal-bg: rgba(33, 33, 33, 0.95);
+            --modal-text: #ffffff;
+            --modal-text-secondary: #cccccc;
+            --modal-button-bg: #66BB6A;
+            --modal-button-secondary: #42A5F5;
+        }
+
         body {
             background: url(/static/minigame_1.png) center/cover fixed;
             margin: 0; padding: 0; min-height: 100vh;
             font-family: 'Fredoka One', cursive;
             image-rendering: pixelated;
             image-rendering: crisp-edges;
+            overflow: hidden;
+        }
+
+        /* Hide scrollbars */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Firefox */
+        html {
+            scrollbar-width: none;
+        }
+
+        .dark-mode #coin-counter {
+            background: rgba(0,0,0,0.8);
+            color: white;
+        }
+
+
+        .red-tint {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 0, 0, 0.3);
+            pointer-events: none;
+            z-index: 50;
+            animation: red-tint-fade 0.5s ease-out;
+        }
+
+        @keyframes red-tint-fade {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
         }
     </style>
 </head>
 <body>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const selectedColor = localStorage.getItem('selectedMeepleColor') || 'blue';
             const meeple = document.getElementById('player-meeple-display');
             meeple.src = `/static/meeple-${selectedColor}.png`;
 
+            // Always apply dark mode
+            document.body.classList.add('dark-mode');
+
             meeple.style.left = '2rem';
             meeple.style.top = '65%';
             meeple.style.transform = 'translateY(-50%)';
+            meeple.style.transition = 'left 0.05s ease-out';
             let coins = [];
             let collectedCoins = 0;
             let lastCoinSpawn = 0;
             let coinSpawnInterval = 500; 
             let coinFallSpeed = 4;
             let gameOver = false;
+            const keysPressed = {};
+            const moveSpeed = 600;
 
             const totalCoins = parseInt(localStorage.getItem('totalCoins') || '0');
             document.getElementById('coin-count').textContent = collectedCoins;
 
+            function checkCoinOverlap(testX, testSize) {
+                for (const coin of coins) {
+                    const coinSize = coin.isDiamond ? 96 : 48;
+                    const coinLeft = coin.x;
+                    const coinRight = coin.x + coinSize;
+                    const testRight = testX + testSize;
+
+                    // Check for horizontal overlap
+                    if (testX < coinRight && testRight > coinLeft) {
+                        return true; // Overlap detected
+                    }
+                }
+                return false; // No overlap
+            }
+
             function createCoin() {
                 const coin = document.createElement('img');
-                const isRedCoin = Math.random() < 0.1; 
+                const rand = Math.random();
+                const isRedCoin = rand < 0.05; // 5% chance for red coins (half of previous)
+                const isDiamond = rand >= 0.05 && rand < 0.1; // 5% chance for diamond
 
-                coin.src = isRedCoin ? '/static/red-coin.png' : '/static/coin.png';
+                if (isRedCoin) {
+                    coin.src = '/static/red-coin.png';
+                } else if (isDiamond) {
+                    coin.src = '/static/diamond.png';
+                } else {
+                    coin.src = '/static/coin.png';
+                }
+
+                const coinSize = isDiamond ? 96 : 48;
+
                 coin.style.cssText = `
                     position: absolute;
-                    width: 48px;
-                    height: 48px;
+                    width: ${coinSize}px;
+                    height: ${coinSize}px;
                     image-rendering: pixelated;
                     pointer-events: none;
                     z-index: 10;
                 `;
 
-                const randomX = Math.random() * (window.innerWidth - 48);
+                // Find a non-overlapping position
+                let randomX;
+                let attempts = 0;
+                do {
+                    randomX = Math.random() * (window.innerWidth - coinSize);
+                    attempts++;
+                    // Prevent infinite loops - if we can't find a spot after 50 attempts, allow overlap
+                    if (attempts > 50) break;
+                } while (checkCoinOverlap(randomX, coinSize));
+
                 coin.style.left = randomX + 'px';
-                coin.style.top = '-48px';
+                coin.style.top = `-${coinSize}px`;
 
                 document.body.appendChild(coin);
 
@@ -57,7 +154,10 @@
                     x: randomX,
                     y: -48,
                     collected: false,
-                    isRedCoin: isRedCoin
+                    isRedCoin: isRedCoin,
+                    isDiamond: isDiamond,
+                    createdAt: Date.now(),
+                    lastY: -48
                 };
             }
 
@@ -74,8 +174,21 @@
 
                 for (let i = coins.length - 1; i >= 0; i--) {
                     const coin = coins[i];
-                    coin.y += coinFallSpeed;
-                    coin.element.style.top = coin.y + 'px';
+
+                    // Skip updating position for collected coins
+                    if (!coin.collected) {
+                        coin.lastY = coin.y; // Store previous position
+                        coin.y += coinFallSpeed;
+                        coin.element.style.top = coin.y + 'px';
+
+                        // If coin hasn't moved (stuck), remove it immediately
+                        if (coin.y === coin.lastY) {
+                            coin.element.remove();
+                            coins.splice(i, 1);
+                            i--; // Adjust index since we removed an item
+                            continue;
+                        }
+                    }
 
                     const coinRect = coin.element.getBoundingClientRect();
                     const meepleRect = meeple.getBoundingClientRect();
@@ -86,20 +199,32 @@
                         coinRect.bottom >= meepleRect.top &&
                         coinRect.top <= meepleRect.bottom) {
 
-                        coin.collected = true;
-                        coin.element.remove();
-                        coins.splice(i, 1);
-
                         if (coin.isRedCoin) {
+                            collectCoin(coin, i);
                             gameOver = true;
+                            // Add red tint overlay
+                            const redTint = document.createElement('div');
+                            redTint.className = 'red-tint';
+                            document.body.appendChild(redTint);
                             showGameOver('You collected a red coin! Game Over!');
+                            i--; // Adjust index since we removed an item from the array
                         } else {
-                            collectedCoins++;
+                            const coinValue = coin.isDiamond ? 5 : 1;
+                            collectedCoins += coinValue;
                             document.getElementById('coin-count').textContent = collectedCoins;
 
                             const currentTotal = parseInt(localStorage.getItem('totalCoins') || '0');
-                            localStorage.setItem('totalCoins', (currentTotal + 1).toString());
+                            localStorage.setItem('totalCoins', (currentTotal + coinValue).toString());
+
+                            collectCoin(coin, i);
+                            i--; // Adjust index since we removed an item from the array
                         }
+                    }
+                    // Remove coins that haven't been collected after 2 seconds
+                    else if (currentTime - coin.createdAt > 2000) {
+                        coin.element.remove();
+                        coins.splice(i, 1);
+                        i--; // Adjust index since we removed an item
                     }
                     else if (coin.y > window.innerHeight) {
                         coin.element.remove();
@@ -111,6 +236,30 @@
             }
 
             gameLoop();
+
+            function updateMovement() {
+                if (gameOver) return;
+
+                const rect = meeple.getBoundingClientRect();
+                let deltaX = 0;
+
+                if (keysPressed['a'] || keysPressed['A']) deltaX -= moveSpeed / 60;
+                if (keysPressed['d'] || keysPressed['D']) deltaX += moveSpeed / 60;
+
+                if (deltaX !== 0) {
+                    const targetX = Math.max(0, Math.min(window.innerWidth - meeple.offsetWidth, rect.left + deltaX));
+                    meeple.style.left = targetX + 'px';
+                }
+
+                requestAnimationFrame(updateMovement);
+            }
+
+            updateMovement();
+
+            function collectCoin(coin, index) {
+                coin.element.remove();
+                coins.splice(index, 1);
+            }
 
             function moveMeeple(targetX) {
                 meeple.style.left = (targetX - meeple.offsetWidth / 2) + 'px';
@@ -138,7 +287,7 @@
 
                 const modalContent = document.createElement('div');
                 modalContent.style.cssText = `
-                    background: rgba(255, 255, 255, 0.95);
+                    background: var(--modal-bg);
                     padding: 2rem;
                     border-radius: 20px;
                     text-align: center;
@@ -152,13 +301,13 @@
                 }
 
                 modalContent.innerHTML = `
-                    <h2 style="color: #333; margin-bottom: 1rem;">Game Over!</h2>
-                    <p style="color: #666; margin-bottom: 1rem;">${message}</p>
-                    <p style="color: #666; margin-bottom: 1rem;">Coins collected this round: <strong>${collectedCoins}</strong></p>
+                    <h2 style="color: var(--modal-text); margin-bottom: 1rem;">Game Over!</h2>
+                    <p style="color: var(--modal-text-secondary); margin-bottom: 1rem;">${message}</p>
+                    <p style="color: var(--modal-text-secondary); margin-bottom: 1rem;">Coins collected this round: <strong style="color: var(--modal-text);">${collectedCoins}</strong></p>
                     ${crownMessage}
                     <div style="display: flex; gap: 1rem; justify-content: center;">
                         <button id="restart-btn" style="
-                            background: #4CAF50;
+                            background: var(--modal-button-bg);
                             color: white;
                             border: none;
                             padding: 1rem 2rem;
@@ -168,7 +317,7 @@
                             font-family: inherit;
                         ">Play Again</button>
                         <button id="hub-btn" style="
-                            background: #2196F3;
+                            background: var(--modal-button-secondary);
                             color: white;
                             border: none;
                             padding: 1rem 2rem;
@@ -197,9 +346,25 @@
                     moveMeeple(event.clientX);
                 }
             });
+
+            document.addEventListener('keydown', function(event) {
+                const key = event.key.toLowerCase();
+                if (key.match(/[ad]/)) {
+                    keysPressed[event.key] = true;
+                    event.preventDefault();
+                }
+            });
+
+            document.addEventListener('keyup', function(event) {
+                const key = event.key.toLowerCase();
+                if (key.match(/[ad]/)) {
+                    delete keysPressed[event.key];
+                    event.preventDefault();
+                }
+            });
         });
     </script>
-    <div id="coin-counter" style="position: absolute; top: 2rem; right: 2rem; display: flex; align-items: center; gap: 0.5rem; background: rgba(0,0,0,0.7); padding: 0.5rem 1rem; border-radius: 10px; color: white; font-size: 1.5rem; z-index: 100; font-family: 'Fredoka One', cursive;">
+    <div id="coin-counter" style="position: absolute; top: 2rem; right: 2rem; display: flex; align-items: center; gap: 0.5rem; background: var(--coin-counter-bg); padding: 0.5rem 1rem; border-radius: 10px; color: white; font-size: 1.5rem; z-index: 100; font-family: 'Fredoka One', cursive;">
         <img src="/static/coin.png" alt="Coin" style="width: 32px; height: 32px; image-rendering: pixelated;">
         <span id="coin-count">0</span>
     </div>
