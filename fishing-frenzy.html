@@ -1,23 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link href="https:
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
             background: url(/static/beach.png) center/cover fixed;
-            margin: 0; padding: 0; min-height: 100vh;
+            margin: 0; padding: 0; min-height: 100vh; width: 100vw;
             font-family: 'Fredoka One', cursive;
             image-rendering: pixelated;
             overflow: hidden;
+            position: relative;
         }
         #display {
-            position: absolute; top: 2rem; right: 2rem;
-            background: rgba(0,0,0,0.8); color: white; padding: 1rem;
-            border-radius: 10px; font-size: 1.5rem; z-index: 30;
+            position: fixed; top: 2%; right: 2%;
+            background: rgba(0,0,0,0.9); color: white; padding: 1rem;
+            border-radius: 15px; font-size: max(14px, 1.2vw); z-index: 30;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.2);
         }
         #fish {
-            position: absolute; font-size: 4rem; z-index: 10;
+            position: absolute; width: 6vw; height: 6vw; min-width: 64px; min-height: 64px; z-index: 10;
             pointer-events: none; user-select: none;
+        }
+        #game-over-modal {
+            display: none;
         }
     </style>
 </head>
@@ -34,11 +43,14 @@
         </div>
     </div>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
         let score = 0, time = 15, gameOver = false;
         const screenArea = window.innerWidth * window.innerHeight;
         const fishCount = Math.max(1, Math.min(5, Math.floor(screenArea / 80000)));
         document.getElementById('score').textContent = score;
         document.getElementById('time').textContent = time;
+
+        console.log('Game starting with time:', time, 'fishCount:', fishCount);
         class FishML {
             constructor() {
                 this.qTable = {};
@@ -171,12 +183,18 @@
             requestAnimationFrame(moveFishes);
         }
         moveFishes();
-        setInterval(() => {
-            if (!gameOver && --time <= 0) {
-                gameOver = true;
-                endGame();
+        const gameTimer = setInterval(() => {
+            if (!gameOver) {
+                time--;
+                console.log('Timer tick: time =', time);
+                document.getElementById('time').textContent = time;
+                if (time <= 0) {
+                    console.log('Game ending - time reached 0');
+                    gameOver = true;
+                    clearInterval(gameTimer);
+                    endGame();
+                }
             }
-            document.getElementById('time').textContent = time;
         }, 1000);
         function endGame() {
             fishes.forEach(fish => fish.element.remove());
@@ -218,6 +236,7 @@
                     }
                 });
             }
+        });
         });
     </script>
 </body>
