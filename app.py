@@ -1,11 +1,15 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 
 app = Flask(__name__)
 app.template_folder = '.'
 
 @app.route('/')
 def hello():
-    return render_template('index.html')   
+    return render_template('index.html')
+
+@app.route('/index.html')
+def index_redirect():
+    return redirect('/')   
 
 @app.route('/play.html')
 def play():
@@ -26,6 +30,10 @@ def fishing_frenzy():
 @app.route('/fishing-frenzy-menu.html')
 def fishing_frenzy_menu():
     return render_template('fishing-frenzy-menu.html')
+
+@app.route('/arcade-menu.html')
+def arcade_menu():
+    return render_template('arcade-menu.html')
 
 @app.route('/arcade-1.html')
 def arcade_1():

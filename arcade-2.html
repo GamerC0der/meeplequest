@@ -29,12 +29,10 @@
             overflow: hidden;
         }
 
-        /* Hide scrollbars */
         ::-webkit-scrollbar {
             display: none;
         }
 
-        /* Firefox */
         html {
             scrollbar-width: none;
         }
@@ -75,7 +73,6 @@
             const meeple = document.getElementById('player-meeple-display');
             meeple.src = `/static/meeple-${selectedColor}.png`;
 
-            // Always apply dark mode
             document.body.classList.add('dark-mode');
 
             meeple.style.left = '2rem';
@@ -101,19 +98,18 @@
                     const coinRight = coin.x + coinSize;
                     const testRight = testX + testSize;
 
-                    // Check for horizontal overlap
                     if (testX < coinRight && testRight > coinLeft) {
-                        return true; // Overlap detected
+                        return true;
                     }
                 }
-                return false; // No overlap
+                return false;
             }
 
             function createCoin() {
                 const coin = document.createElement('img');
                 const rand = Math.random();
-                const isRedCoin = rand < 0.05; // 5% chance for red coins (half of previous)
-                const isDiamond = rand >= 0.05 && rand < 0.1; // 5% chance for diamond
+                const isRedCoin = rand < 0.05;
+                const isDiamond = rand >= 0.05 && rand < 0.1;
 
                 if (isRedCoin) {
                     coin.src = '/static/red-coin.png';
@@ -134,13 +130,11 @@
                     z-index: 10;
                 `;
 
-                // Find a non-overlapping position
                 let randomX;
                 let attempts = 0;
                 do {
                     randomX = Math.random() * (window.innerWidth - coinSize);
                     attempts++;
-                    // Prevent infinite loops - if we can't find a spot after 50 attempts, allow overlap
                     if (attempts > 50) break;
                 } while (checkCoinOverlap(randomX, coinSize));
 
@@ -175,17 +169,15 @@
                 for (let i = coins.length - 1; i >= 0; i--) {
                     const coin = coins[i];
 
-                    // Skip updating position for collected coins
                     if (!coin.collected) {
-                        coin.lastY = coin.y; // Store previous position
+                        coin.lastY = coin.y;
                         coin.y += coinFallSpeed;
                         coin.element.style.top = coin.y + 'px';
 
-                        // If coin hasn't moved (stuck), remove it immediately
                         if (coin.y === coin.lastY) {
                             coin.element.remove();
                             coins.splice(i, 1);
-                            i--; // Adjust index since we removed an item
+                            i--;
                             continue;
                         }
                     }
@@ -202,12 +194,11 @@
                         if (coin.isRedCoin) {
                             collectCoin(coin, i);
                             gameOver = true;
-                            // Add red tint overlay
                             const redTint = document.createElement('div');
                             redTint.className = 'red-tint';
                             document.body.appendChild(redTint);
                             showGameOver('You collected a red coin! Game Over!');
-                            i--; // Adjust index since we removed an item from the array
+                            i--;
                         } else {
                             const coinValue = coin.isDiamond ? 5 : 1;
                             collectedCoins += coinValue;
@@ -217,14 +208,13 @@
                             localStorage.setItem('totalCoins', (currentTotal + coinValue).toString());
 
                             collectCoin(coin, i);
-                            i--; // Adjust index since we removed an item from the array
+                            i--;
                         }
                     }
-                    // Remove coins that haven't been collected after 2 seconds
                     else if (currentTime - coin.createdAt > 2000) {
                         coin.element.remove();
                         coins.splice(i, 1);
-                        i--; // Adjust index since we removed an item
+                        i--;
                     }
                     else if (coin.y > window.innerHeight) {
                         coin.element.remove();
@@ -363,6 +353,7 @@
                 }
             });
         });
+document.addEventListener('contextmenu',e=>{e.preventDefault();const m=document.createElement('div');m.innerHTML=`<div style="position:fixed;top:${e.clientY}px;left:${e.clientX}px;background:#333;color:#fff;padding:10px;border-radius:8px;z-index:9999;font-family:'Fredoka One',cursive;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.5);"><div style="margin-bottom:8px;"><b>Navigation</b></div><div onclick="window.location.href='/arcade-menu.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🎮 Back to Arcade</div><div onclick="window.location.href='/index.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🏠 Home</div><div onclick="window.location.href='/play.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🏰 Hub</div><div onclick="window.location.href='/fishing-frenzy-menu.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🎣 Fishing</div>`;document.body.appendChild(m);setTimeout(()=>{m.remove()},5000);document.addEventListener('click',()=>m.remove(),{once:true})});
     </script>
     <div id="coin-counter" style="position: absolute; top: 2rem; right: 2rem; display: flex; align-items: center; gap: 0.5rem; background: var(--coin-counter-bg); padding: 0.5rem 1rem; border-radius: 10px; color: white; font-size: 1.5rem; z-index: 100; font-family: 'Fredoka One', cursive;">
         <img src="/static/coin.png" alt="Coin" style="width: 32px; height: 32px; image-rendering: pixelated;">
