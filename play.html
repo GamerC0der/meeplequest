@@ -8,12 +8,10 @@ body {
     image-rendering: crisp-edges;
     position: relative;
 }
-
 @keyframes modalFadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
 }
-
 @keyframes modalSlideIn {
     from {
         opacity: 0;
@@ -24,7 +22,6 @@ body {
         transform: translate(-50%, -50%) scale(1);
     }
 }
-
 @keyframes itemFadeIn {
     from {
         opacity: 0;
@@ -35,7 +32,6 @@ body {
         transform: translateY(0);
     }
 }
-
 @keyframes balloonsFloat {
     0%, 100% {
         transform: translate(-50%, -50%) translateY(0);
@@ -44,7 +40,6 @@ body {
         transform: translate(-50%, -50%) translateY(-5%);
     }
 }
-
 @keyframes menuPopIn {
     from {
         opacity: 0;
@@ -53,47 +48,67 @@ body {
         opacity: 1;
     }
 }
-
 #inventory-search:focus {
     border-color: rgba(255,215,0,0.8) !important;
 }
-
 #inventory-content::-webkit-scrollbar {
     width: 8px;
 }
-
 #inventory-content::-webkit-scrollbar-track {
     background: rgba(139,69,19,0.1);
     border-radius: 4px;
 }
-
 #inventory-content::-webkit-scrollbar-thumb {
     background: rgba(139,69,19,0.5);
     border-radius: 4px;
 }
-
 #inventory-content::-webkit-scrollbar-thumb:hover {
     background: rgba(139,69,19,0.7);
 }
-
 .modal-center {
     display: flex;
     justify-content: center;
     align-items: center;
 }
-
-#map-btn:hover, #news-btn:hover {
-    transform: scale(1.2);
-    transition: transform 0.2s ease;
+#coin-counter {
+    user-select: none;
+    cursor: move;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.3);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
-
+#coin-counter:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+}
+#coin-counter:active {
+    cursor: grabbing;
+}
+#map-btn, #news-btn {
+    user-select: none;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(8px);
+    border: 2px solid rgba(255,255,255,0.4);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+#map-btn:hover, #news-btn:hover {
+    transform: scale(1.1);
+    border-color: rgba(255,255,255,0.8);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+#map-btn:active, #news-btn:active {
+    transform: scale(0.95);
+}
+.current-location {
+    color: #FFD700 !important;
+    font-weight: bold;
+}
 </style>
-
-<div id="coin-counter" style="position: fixed; top: 2rem; right: 2rem; display: flex; align-items: center; gap: 0.5rem; background: rgba(0,0,0,0.7); padding: 0.5rem 1rem; border-radius: 10px; color: white; font-size: 1.5rem; z-index: 100; font-family: 'Fredoka One', cursive;">
-    <img src="/static/coin.png" alt="Coin" style="width: 32px; height: 32px; image-rendering: pixelated;">
+<div id="coin-counter" style="position: fixed; top: 2%; right: 2%; display: flex; align-items: center; gap: 0.5rem; background: rgba(0,0,0,0.7); padding: 0.5% 1%; border-radius: 10px; color: white; font-size: 1.5vw; z-index: 100; font-family: 'Fredoka One', cursive;">
+    <img src="/static/coin.png" alt="Coin" style="width: 2vw; height: 2vw; image-rendering: pixelated;">
     <span id="coin-count">0</span>
 </div>
-
 <img id="player-meeple" src="/static/meeple-blue.png" alt="Player Meeple" style="width: 256px; height: 256px; position: absolute; cursor: pointer; image-rendering: pixelated;">
 <img id="equipped-hat" src="" alt="Equipped Hat" style="width: 64px; height: 64px; position: absolute; image-rendering: pixelated; display: none; pointer-events: none;">
 <img id="balloons" src="/static/ballons.png" alt="Balloons" style="width: 200px; height: auto; position: absolute; pointer-events: none; image-rendering: pixelated; z-index: 10;">
@@ -101,13 +116,13 @@ body {
 <img id="arcade" src="/static/arcade.png" alt="Arcade" style="width: 200px; height: auto; position: absolute; pointer-events: none;">
 <img id="collectible-coin" src="/static/coin.png" alt="Collectible Coin" style="width: 64px; height: 64px; position: absolute; left: 2rem; bottom: 2rem; image-rendering: pixelated; cursor: pointer;">
 <img id="market" src="/static/market.png" alt="Market" style="position: absolute; top: 68%; left: 25%; width: 375px; height: auto; image-rendering: pixelated; z-index: 50; cursor: pointer;">
-<button id="map-btn" style="position: fixed; right: 2rem; bottom: 6rem; background: rgba(0,0,0,0.7); border: 2px solid white; border-radius: 10px; padding: 0.5rem; cursor: pointer; z-index: 100;">
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<button id="map-btn" style="position: fixed; right: 2%; bottom: 3%; background: rgba(0,0,0,0.7); border: 2px solid white; border-radius: 10px; padding: 0.5rem; cursor: pointer; z-index: 100;">
+    <svg width="2vw" height="2vw" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" fill="white"/>
     </svg>
 </button>
-<button id="news-btn" style="position: fixed; right: 2rem; bottom: 2rem; background: rgba(0,0,0,0.7); border: 2px solid white; border-radius: 10px; padding: 0.5rem; cursor: pointer; z-index: 100;">
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<button id="news-btn" style="position: fixed; right: 2%; bottom: 15%; background: rgba(0,0,0,0.7); border: 2px solid white; border-radius: 10px; padding: 0.5rem; cursor: pointer; z-index: 100;">
+    <svg width="2vw" height="2vw" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M19 3H5C3.89 3 3 3.89 3 5V19C3 20.11 3.89 21 5 21H19C20.11 21 21 20.11 21 19V5C21 3.89 20.11 3 19 3ZM19 19H5V5H19V19Z" fill="white"/>
         <path d="M7 7H17V9H7V7ZM7 11H17V13H7V11ZM7 15H13V17H7V15Z" fill="white"/>
     </svg>
@@ -118,16 +133,13 @@ body {
             <h1 style="color: #2F1B14; font-family: 'Georgia', 'Times New Roman', serif; font-size: 3rem; font-weight: bold; text-shadow: 3px 3px 6px rgba(0,0,0,0.9); margin: 0; text-transform: uppercase; letter-spacing: 0.15em; -webkit-text-stroke: 1px #8B4513;">THE SIEGE TIMES</h1>
             <div style="color: #8B4513; font-family: 'Times New Roman', serif; font-size: 1.2rem; font-weight: bold; margin-top: 0.5rem;">Sep 30, 2025</div>
         </div>
-
         <button id="prev-page-btn" style="position: absolute; top: 50%; left: 1rem; transform: translateY(-50%); background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; font-weight: bold; cursor: pointer; display: none; z-index: 15;">←</button>
         <button id="next-page-btn" style="position: absolute; top: 50%; right: 1rem; transform: translateY(-50%); background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; font-weight: bold; cursor: pointer; z-index: 15;">→</button>
-
         <div style="position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.5rem; z-index: 15;">
             <div id="page-dot-1" style="width: 12px; height: 12px; border-radius: 50%; background: white; border: 2px solid #8B4513;"></div>
             <div id="page-dot-2" style="width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.5); border: 2px solid #8B4513;"></div>
             <div id="page-dot-3" style="width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.5); border: 2px solid #8B4513;"></div>
         </div>
-
         <div id="news-page-1" style="position: absolute; bottom: 0; left: 0; right: 0; height: 50%; background: rgba(255,255,255,0.95); border-radius: 0 0 20px 20px; padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center;">
             <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
                 <img src="/static/meeple-blue.png" alt="Blue Meeple" style="width: 80px; height: 80px; image-rendering: pixelated;">
@@ -145,7 +157,6 @@ body {
                 To celebrate our return, we've added some balloons to celebrate!
             </p>
         </div>
-
         <div id="news-page-2" style="position: absolute; bottom: 0; left: 0; right: 0; height: 50%; background: rgba(255,255,255,0.95); border-radius: 0 0 20px 20px; padding: 2rem; display: none; flex-direction: column; align-items: center; justify-content: center;">
             <div style="display: flex; align-items: center; margin-bottom: 1rem;">
                 <img src="/static/coin.png" alt="Coin" style="width: 60px; height: 60px; image-rendering: pixelated; margin-right: 1rem;">
@@ -157,7 +168,6 @@ body {
                 You can earn coins by completing minigames or walking around the castle. The coins on the castle reset every 30 seconds.
             </p>
         </div>
-
         <div id="news-page-3" style="position: absolute; bottom: 0; left: 0; right: 0; height: 50%; background: rgba(255,255,255,0.95); border-radius: 0 0 20px 20px; padding: 2rem; display: none; flex-direction: column; align-items: center; justify-content: center;">
             <div style="display: flex; align-items: center; margin-bottom: 1rem;">
                 <img src="/static/crown.png" alt="Crown" style="width: 60px; height: 60px; image-rendering: pixelated; margin-right: 1rem;">
@@ -169,7 +179,6 @@ body {
                 Orpheus, when he returned from the islands of the summer, found that if you get a score above 50 on Catch It, a special item may be given.
             </p>
         </div>
-
         <button id="close-modal-btn" style="position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; z-index: 20;">×</button>
     </div>
 </div>
@@ -190,7 +199,6 @@ body {
         <button id="inventory-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 0.5rem 1rem; font-family: 'Georgia', serif; font-size: 1rem; font-weight: bold; cursor: pointer;">Inventory</button>
     </div>
 </div>
-
 <div id="inventory-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(20,20,20,0.85) 100%); backdrop-filter: blur(8px); z-index: 1200; animation: modalFadeIn 0.3s ease-out;">
     <div style="background: url(/static/textbg.png) center/cover; width: 90%; height: 85%; max-width: 800px; max-height: 650px; border-radius: 24px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; padding: 2.5rem; box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); border: 3px solid rgba(139,69,19,0.3); animation: modalSlideIn 0.4s ease-out 0.1s forwards;">
         <button id="close-inventory-modal-btn" style="position: absolute; top: 1.5rem; right: 1.5rem; background: linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(30,30,30,0.9) 100%); color: white; border: 3px solid rgba(255,255,255,0.8); border-radius: 50%; width: 48px; height: 48px; font-size: 28px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; z-index: 20; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">&times;</button>
@@ -200,18 +208,15 @@ body {
             <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #8B4513; font-size: 1.2rem;">&#128269;</div>
         </div>
         <div id="inventory-content" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1.5rem; width: 100%; max-height: 400px; overflow-y: auto; padding: 0.5rem; scrollbar-width: thin; scrollbar-color: rgba(139,69,19,0.5) transparent;">
-
         </div>
     </div>
 </div>
-
 <div id="item-menu" style="display: none; position: absolute; background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,245,245,0.95) 100%); padding: 0.75rem; border-radius: 12px; border: 2px solid rgba(139,69,19,0.3); image-rendering: pixelated; z-index: 1300; box-shadow: 0 8px 25px rgba(0,0,0,0.3), 0 0 15px rgba(139,69,19,0.2); backdrop-filter: blur(10px);">
     <div style="display: flex; align-items: center; gap: 0.75rem;">
         <button id="equip-btn" style="background: linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(30,30,30,0.9) 100%); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 0.6rem 1.2rem; font-family: 'Georgia', serif; font-size: 0.9rem; font-weight: bold; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-transform: uppercase; letter-spacing: 0.5px;">Equip</button>
         <button id="close-item-menu-btn" style="background: linear-gradient(135deg, rgba(139,69,19,0.8) 0%, rgba(101,67,33,0.8) 100%); color: white; border: 2px solid rgba(255,255,255,0.8); border-radius: 50%; width: 28px; height: 28px; font-size: 16px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; transition: all 0.2s ease; box-shadow: 0 3px 8px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center;">×</button>
     </div>
 </div>
-
 <div id="market-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
     <div style="background: url(/static/textbg.png) center/cover; width: 80%; height: 80%; max-width: 800px; max-height: 600px; border-radius: 20px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
         <div id="market-tabs" style="position: absolute; top: -40px; left: 50%; transform: translateX(-50%); display: flex; gap: 2px; z-index: 60;">
@@ -250,13 +255,12 @@ body {
                 <p style="color: #2F1B14; font-family: 'Georgia', serif; font-size: 1rem; font-style: italic; margin: 1rem 0 0 0; text-align: center; max-width: 400px;">To see your inventory, please click on your player.</p>
             </div>
         </div>
-
         <div id="news-content" class="tab-content" style="display: none;">
             <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
                 <p style="color: #2F1B14; font-family: 'Georgia', serif; font-size: 1.5rem; text-align: center; margin: 0; padding: 2rem;">
                     Click the button at the bottom right, then click the icon.
                 </p>
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-top: 1rem;">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M19 3H5C3.89 3 3 3.89 3 5V19C3 20.11 3.89 21 5 21H19C20.11 21 21 20.11 21 19V5C21 3.89 20.11 3 19 3ZM19 19H5V5H19V19Z" fill="#2F1B14"/>
                     <path d="M7 7H17V9H7V7ZM7 11H17V13H7V11ZM7 15H13V17H7V15Z" fill="#2F1B14"/>
                 </svg>
@@ -266,7 +270,6 @@ body {
     </div>
 </div>
 <div id="pixel-art-text" style="position: absolute; color: white; font-family: 'Fredoka One', cursive; font-size: 24px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); pointer-events: none; opacity: 0; transition: opacity 0.3s ease-in-out;">!</div>
-
 <div id="arcade-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1500;" class="modal-center">
     <div style="background: url(/static/textbg.png) center/cover; width: 80%; height: 80%; max-width: 600px; max-height: 400px; border-radius: 20px; position: relative; image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
         <h1 style="color: #8B4513; font-family: 'Georgia', serif; font-size: 3rem; font-weight: bold; text-transform: uppercase; margin: 0 0 2rem 0; text-shadow: 3px 3px 6px rgba(0,0,0,0.9); -webkit-text-stroke: 1px #2F1B14;">ARCADE</h1>
@@ -275,7 +278,6 @@ body {
         <button id="arcade-back-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 8px; padding: 0.75rem 1.5rem; font-family: 'Georgia', serif; font-size: 1rem; font-weight: bold; cursor: pointer;">Back</button>
     </div>
 </div>
-
 <div id="crown-award-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1500;" class="modal-center">
     <div style="background: url(/static/textbg.png) center/cover; width: 80%; height: 80%; max-width: 500px; max-height: 400px; border-radius: 20px; position: relative; image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
         <button id="close-crown-modal-btn" style="position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; z-index: 20;">×</button>
@@ -286,8 +288,6 @@ body {
         </div>
     </div>
 </div>
-
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const selectedColor = localStorage.getItem('selectedMeepleColor') || 'blue';
@@ -322,10 +322,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const catchItBtn = document.getElementById('catch-it-btn');
     const fishingFrenzyBtn = document.getElementById('fishing-frenzy-btn');
     const arcadeBackBtn = document.getElementById('arcade-back-btn');
-
     let selectedItemForEquip = null;
     let currentlyEquippedItem = localStorage.getItem('currentlyEquippedItem') || null;
-
     function updateHatDisplay() {
         if (currentlyEquippedItem) {
             if (currentlyEquippedItem === 'Hat') {
@@ -341,7 +339,6 @@ document.addEventListener('DOMContentLoaded', function() {
             equippedHat.style.display = 'none';
         }
     }
-
     function positionHat() {
         if (currentlyEquippedItem && equippedHat.style.display !== 'none') {
             const meepleRect = meeple.getBoundingClientRect();
@@ -351,25 +348,20 @@ document.addEventListener('DOMContentLoaded', function() {
             equippedHat.style.zIndex = '100';
         }
     }
-
     function equipItem(itemName) {
         currentlyEquippedItem = itemName;
         localStorage.setItem('currentlyEquippedItem', itemName);
         updateHatDisplay();
     }
-
     function unequipItem() {
         currentlyEquippedItem = null;
         localStorage.removeItem('currentlyEquippedItem');
         updateHatDisplay();
     }
-
     function showArcadeModal() {
         arcadeModal.style.display = 'flex';
-
         const hasVisitedLighthouse = localStorage.getItem('hasVisitedLighthouse') === 'true';
         const fishingFrenzyBtn = document.getElementById('fishing-frenzy-btn');
-
         if (hasVisitedLighthouse) {
             fishingFrenzyBtn.style.background = 'rgba(0,0,0,0.8)';
             fishingFrenzyBtn.style.color = 'white';
@@ -384,7 +376,6 @@ document.addEventListener('DOMContentLoaded', function() {
             fishingFrenzyBtn.textContent = 'Fishing Frenzy 🔒';
         }
     }
-
     const newsPage1 = document.getElementById('news-page-1');
     const newsPage2 = document.getElementById('news-page-2');
     const newsPage3 = document.getElementById('news-page-3');
@@ -393,37 +384,29 @@ document.addEventListener('DOMContentLoaded', function() {
     const pageDot1 = document.getElementById('page-dot-1');
     const pageDot2 = document.getElementById('page-dot-2');
     const pageDot3 = document.getElementById('page-dot-3');
-
     let currentPage = 1;
-
     const lastCollectedTime = localStorage.getItem('lastCoinCollected');
     if (lastCollectedTime && Date.now() - parseInt(lastCollectedTime) < 30000) {
         collectibleCoin.style.display = 'none';
         const remainingTime = 30000 - (Date.now() - parseInt(lastCollectedTime));
         setTimeout(respawnCoin, remainingTime);
     }
-
     meeple.src = `/static/meeple-${selectedColor}.png`;
     menuMeepleImg.src = `/static/meeple-${selectedColor}.png`;
-
     meeple.style.left = '50%';
     meeple.style.top = '50%';
     meeple.style.transform = 'translate(-50%, -50%)';
-
     const balloons = document.getElementById('balloons');
-
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth() + 1;
     const currentDay = currentDate.getDate();
     const isOctoberFirstTwoWeeks = currentMonth === 10 && currentDay >= 1 && currentDay <= 14;
-
     if (isOctoberFirstTwoWeeks) {
         balloons.style.left = '35%';
         balloons.style.top = '55%';
         balloons.style.transform = 'translate(-50%, -50%)';
         balloons.style.animation = 'balloonsFloat 5s ease-in-out infinite';
         balloons.style.display = 'block';
-
         const balloonsBottomRight = document.getElementById('balloons-bottom-right');
         balloonsBottomRight.style.right = '5%';
         balloonsBottomRight.style.bottom = '10%';
@@ -435,61 +418,48 @@ document.addEventListener('DOMContentLoaded', function() {
         const balloonsBottomRight = document.getElementById('balloons-bottom-right');
         balloonsBottomRight.style.display = 'none';
     }
-
     setTimeout(() => {
         updateHatDisplay();
     }, 50);
-
     const crownEarned = localStorage.getItem('crownEarned') === 'true';
     const crownAwardShown = localStorage.getItem('crownAwardShown') === 'true';
-
     if (crownEarned && !crownAwardShown) {
         crownAwardModal.style.display = 'flex';
         localStorage.setItem('crownAwardShown', 'true');
     }
-
     arcade.style.left = 'calc(50% + 100px + 25%)';
     arcade.style.top = '50%';
     arcade.style.transform = 'translate(-50%, -50%)';
-
     setTimeout(checkProximity, 100);
-
     const pixelsPerSecond = 600;
     const pixelArtText = document.getElementById('pixel-art-text');
     let hasEnteredArcade = false;
     let hasEnteredRightRoom = false;
-
     function checkProximity() {
         const meepleRect = meeple.getBoundingClientRect();
         const arcadeRect = arcade.getBoundingClientRect();
-
         const isOverlapping = !(meepleRect.right < arcadeRect.left ||
                                meepleRect.left > arcadeRect.right ||
                                meepleRect.bottom < arcadeRect.top ||
                                meepleRect.top > arcadeRect.bottom);
-
         if (isOverlapping && !hasEnteredArcade) {
             hasEnteredArcade = true;
             showArcadeModal();
             return;
         }
-
         if (meepleRect.left > window.innerWidth * 0.85 && !hasEnteredRightRoom) {
             hasEnteredRightRoom = true;
             window.location.href = '/play-2.html';
             return;
         }
-
         const meepleCenterX = meepleRect.left + meepleRect.width / 2;
         const meepleCenterY = meepleRect.top + meepleRect.height / 2;
         const arcadeCenterX = arcadeRect.left + arcadeRect.width / 2;
         const arcadeCenterY = arcadeRect.top + arcadeRect.height / 2;
-
         const distance = Math.sqrt(
             Math.pow(meepleCenterX - arcadeCenterX, 2) +
             Math.pow(meepleCenterY - arcadeCenterY, 2)
         );
-
         if (distance < 150 && !hasEnteredArcade) {
             pixelArtText.style.opacity = '1';
             pixelArtText.style.left = arcadeCenterX + 'px';
@@ -498,51 +468,38 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             pixelArtText.style.opacity = '0';
         }
-
         checkCoinCollection();
     }
-
     function checkCoinCollection() {
         if (collectibleCoin.style.display === 'none') return;
-
         const meepleRect = meeple.getBoundingClientRect();
         const coinRect = collectibleCoin.getBoundingClientRect();
-
         const isOverlapping = !(meepleRect.right < coinRect.left ||
                                meepleRect.left > coinRect.right ||
                                meepleRect.bottom < coinRect.top ||
                                meepleRect.top > coinRect.bottom);
-
         if (isOverlapping) {
             collectCoin();
         }
     }
-
     function collectCoin() {
         collectibleCoin.style.display = 'none';
-
         localStorage.setItem('lastCoinCollected', Date.now().toString());
-
         const currentCoins = parseInt(localStorage.getItem('totalCoins') || '0');
         const newCoins = currentCoins + 1;
         localStorage.setItem('totalCoins', newCoins.toString());
         coinCountElement.textContent = newCoins;
-
         if (marketModal.style.display === 'flex') {
             updateMarketButtons();
         }
-
         if (playerMenu.style.display === 'block') {
             updatePlayerMenuCoins();
         }
-
         setTimeout(respawnCoin, Math.random() * 10000 + 5000);
     }
-
     function respawnCoin() {
         collectibleCoin.style.display = 'block';
     }
-
     function moveMeeple(targetX, targetY) {
         const rect = meeple.getBoundingClientRect();
         const currentX = rect.left;
@@ -553,13 +510,11 @@ document.addEventListener('DOMContentLoaded', function() {
         meeple.style.left = targetX + 'px';
         meeple.style.top = targetY + 'px';
         meeple.style.transform = 'none';
-
         if (currentlyEquippedItem) {
             equippedHat.style.transition = `all ${duration}s ease-in-out`;
             equippedHat.style.left = (targetX + meeple.clientWidth / 2 - 32) + 'px';
             equippedHat.style.top = (targetY + 10) + 'px';
         }
-
         setTimeout(function() {
             checkProximity();
             if (currentlyEquippedItem) {
@@ -567,18 +522,58 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, duration * 1000);
     }
-
     const totalCoins = parseInt(localStorage.getItem('totalCoins') || '0');
     document.getElementById('coin-count').textContent = totalCoins;
+
+    function makeDraggable(element) {
+        let isDragging = false;
+        let startX, startY, initialX, initialY, currentX, currentY;
+
+        element.addEventListener('mousedown', function(e) {
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            const rect = element.getBoundingClientRect();
+            initialX = rect.left;
+            initialY = rect.top;
+            currentX = initialX;
+            currentY = initialY;
+            element.style.cursor = 'grabbing';
+            element.style.position = 'fixed';
+        });
+
+        function updatePosition(e) {
+            if (!isDragging) return;
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+            currentX = initialX + dx;
+            currentY = initialY + dy;
+            element.style.left = currentX + 'px';
+            element.style.top = currentY + 'px';
+            element.style.right = 'auto';
+            requestAnimationFrame(() => updatePosition(e));
+        }
+
+        document.addEventListener('mousemove', function(e) {
+            if (isDragging) updatePosition(e);
+        });
+
+        document.addEventListener('mouseup', function() {
+            isDragging = false;
+            element.style.cursor = 'move';
+        });
+    }
+
+    makeDraggable(document.getElementById('coin-counter'));
+    makeDraggable(document.getElementById('map-btn'));
+    makeDraggable(document.getElementById('news-btn'));
 
     function updateMarketButtons() {
         const currentCoins = parseInt(localStorage.getItem('totalCoins') || '0');
         const hatBtn = document.getElementById('hat-buy-btn');
         const pirateHatBtn = document.getElementById('pirate-hat-buy-btn');
-
         const hatPurchased = localStorage.getItem('hatPurchased') === 'true';
         const pirateHatPurchased = localStorage.getItem('pirateHatPurchased') === 'true';
-
         if (hatPurchased) {
             hatBtn.textContent = 'Bought';
             hatBtn.style.background = 'rgba(34,139,34,0.8)';
@@ -601,7 +596,6 @@ document.addEventListener('DOMContentLoaded', function() {
             hatBtn.style.cursor = 'not-allowed';
             hatBtn.disabled = true;
         }
-
         if (pirateHatPurchased) {
             pirateHatBtn.textContent = 'Bought';
             pirateHatBtn.style.background = 'rgba(34,139,34,0.8)';
@@ -625,7 +619,6 @@ document.addEventListener('DOMContentLoaded', function() {
             pirateHatBtn.disabled = true;
         }
     }
-
     function buyHat() {
         const currentCoins = parseInt(localStorage.getItem('totalCoins') || '0');
         if (currentCoins >= 100) {
@@ -634,13 +627,11 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('hatPurchased', 'true');
             document.getElementById('coin-count').textContent = newCoins;
             updateMarketButtons();
-
             if (playerMenu.style.display === 'block') {
                 updatePlayerMenuCoins();
             }
         }
     }
-
     function buyPirateHat() {
         const currentCoins = parseInt(localStorage.getItem('totalCoins') || '0');
         if (currentCoins >= 250) {
@@ -649,104 +640,85 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('pirateHatPurchased', 'true');
             document.getElementById('coin-count').textContent = newCoins;
             updateMarketButtons();
-
             if (playerMenu.style.display === 'block') {
                 updatePlayerMenuCoins();
             }
         }
     }
-
     newsBtn.addEventListener('click', function(event) {
         event.stopPropagation();
         newsModal.style.display = 'flex';
         showPage(1);
     });
-
     mapBtn.addEventListener('click', function(event) {
         event.stopPropagation();
         mapModal.style.display = 'flex';
+        marketText.classList.add('current-location');
+        lighthouseText.classList.remove('current-location');
     });
-
     const marketText = document.getElementById('market-text');
     marketText.addEventListener('click', function(event) {
         event.stopPropagation();
         window.location.href = 'play.html';
     });
-
     const lighthouseText = document.getElementById('lighthouse-text');
     lighthouseText.addEventListener('click', function(event) {
         event.stopPropagation();
         window.location.href = 'play-2.html';
     });
-
     closeModalBtn.addEventListener('click', function() {
         newsModal.style.display = 'none';
     });
-
     const closeMapModalBtn = document.getElementById('close-map-modal-btn');
     closeMapModalBtn.addEventListener('click', function() {
         mapModal.style.display = 'none';
     });
-
     newsModal.addEventListener('click', function(event) {
         if (event.target === newsModal) {
             newsModal.style.display = 'none';
         }
     });
-
     mapModal.addEventListener('click', function(event) {
         if (event.target === mapModal) {
             mapModal.style.display = 'none';
         }
     });
-
     marketImg.addEventListener('click', function() {
         marketModal.style.display = 'flex';
         updateMarketButtons();
     });
-
     document.getElementById('hat-buy-btn').addEventListener('click', function() {
         if (!this.disabled) {
             buyHat();
         }
     });
-
     document.getElementById('pirate-hat-buy-btn').addEventListener('click', function() {
         if (!this.disabled) {
             buyPirateHat();
         }
     });
-
     function updatePlayerMenuCoins() {
         const currentCoins = parseInt(localStorage.getItem('totalCoins') || '0');
         document.getElementById('menu-coin-count').textContent = currentCoins;
     }
-
     function updateInventoryDisplay(searchTerm = '') {
         inventoryContent.innerHTML = '';
-
         const hatPurchased = localStorage.getItem('hatPurchased') === 'true';
         const pirateHatPurchased = localStorage.getItem('pirateHatPurchased') === 'true';
         const crownEarned = localStorage.getItem('crownEarned') === 'true';
-
         const items = [];
-
         if (hatPurchased) {
             items.push({ name: 'Hat', img: '/static/hat.png', rarity: 'common' });
         }
-
         if (pirateHatPurchased) {
             items.push({ name: 'Pirate Hat', img: '/static/pirate_hat.png', rarity: 'rare' });
         }
-
         if (crownEarned) {
             items.push({ name: 'Crown', img: '/static/crown.png', rarity: 'legendary' });
         }
-
         const filteredItems = items.filter(item =>
             item.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
-
         if (filteredItems.length === 0) {
             const noItemsDiv = document.createElement('div');
             noItemsDiv.style.gridColumn = '1 / -1';
@@ -771,7 +743,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     legendary: { bg: 'linear-gradient(135deg, rgba(220,220,220,0.9) 0%, rgba(200,200,200,0.9) 100%)', border: 'rgba(150,150,150,0.8)', glow: 'rgba(150,150,150,0.3)' }
                 };
                 const colors = rarityColors[item.rarity] || rarityColors.common;
-
                 itemDiv.style.background = colors.bg;
                 itemDiv.style.border = `3px solid ${colors.border}`;
                 itemDiv.style.borderRadius = '16px';
@@ -781,7 +752,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 itemDiv.style.position = 'relative';
                 itemDiv.style.overflow = 'hidden';
                 itemDiv.style.animation = `itemFadeIn 0.3s ease-out ${index * 0.05}s both`;
-
                 if (isEquipped) {
                     itemDiv.style.borderColor = '#FFD700';
                     itemDiv.innerHTML = `
@@ -805,18 +775,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     `;
                 }
-
-
                 itemDiv.addEventListener('click', function(event) {
                     event.stopPropagation();
                     selectedItemForEquip = item.name;
-
                     const rect = itemDiv.getBoundingClientRect();
                     const modalRect = inventoryModal.getBoundingClientRect();
-
                     itemMenu.style.left = (rect.left - modalRect.left + rect.width / 2 - 75) + 'px';
                     itemMenu.style.top = (rect.top - modalRect.top - 60) + 'px';
-
                     if (currentlyEquippedItem === item.name) {
                         equipBtn.textContent = 'Unequip';
                         equipBtn.style.background = 'linear-gradient(135deg, rgba(139,69,19,0.9) 0%, rgba(101,67,33,0.9) 100%)';
@@ -828,21 +793,17 @@ document.addEventListener('DOMContentLoaded', function() {
                         equipBtn.style.borderColor = '#8B4513';
                         equipBtn.style.boxShadow = '0 4px 12px rgba(0,0,0,0.4)';
                     }
-
                     itemMenu.style.display = 'block';
                     itemMenu.style.animation = 'menuPopIn 0.2s ease-out';
                 });
-
                 inventoryContent.appendChild(itemDiv);
             });
         }
     }
-
     inventoryBtn.addEventListener('click', function() {
         updateInventoryDisplay();
         inventoryModal.style.display = 'flex';
     });
-
     meeple.addEventListener('click', function(event) {
         event.stopPropagation();
         if (playerMenu.style.display === 'none' || playerMenu.style.display === '') {
@@ -855,28 +816,23 @@ document.addEventListener('DOMContentLoaded', function() {
             playerMenu.style.display = 'none';
         }
     });
-
     closeMarketModalBtn.addEventListener('click', function() {
         marketModal.style.display = 'none';
     });
-
     marketTabs.forEach(tab => {
         tab.addEventListener('click', function() {
             const tabType = this.getAttribute('data-tab');
-
             marketTabs.forEach(t => {
                 t.classList.remove('active');
                 t.style.background = 'rgba(139, 69, 19, 0.7)';
             });
             this.classList.add('active');
             this.style.background = 'rgba(139, 69, 19, 0.9)';
-
             const tabContents = document.querySelectorAll('.tab-content');
             tabContents.forEach(content => {
                 content.style.display = 'none';
                 content.classList.remove('active');
             });
-
             const activeContent = document.getElementById(tabType + '-content');
             if (activeContent) {
                 activeContent.style.display = 'flex';
@@ -884,27 +840,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
     closePlayerMenuBtn.addEventListener('click', function() {
         playerMenu.style.display = 'none';
     });
-
     closeInventoryModalBtn.addEventListener('click', function() {
         inventoryModal.style.display = 'none';
         itemMenu.style.display = 'none';
     });
-
     inventoryModal.addEventListener('click', function(event) {
         if (event.target === inventoryModal) {
             inventoryModal.style.display = 'none';
         }
     });
-
     inventorySearch.addEventListener('input', function() {
         updateInventoryDisplay(this.value);
         itemMenu.style.display = 'none'; 
     });
-
     equipBtn.addEventListener('click', function() {
         if (selectedItemForEquip) {
             if (currentlyEquippedItem === selectedItemForEquip) {
@@ -918,61 +869,50 @@ document.addEventListener('DOMContentLoaded', function() {
             selectedItemForEquip = null;
         }
     });
-
     closeItemMenuBtn.addEventListener('click', function() {
         itemMenu.style.display = 'none';
         selectedItemForEquip = null;
     });
-
     closeCrownModalBtn.addEventListener('click', function() {
         crownAwardModal.style.display = 'none';
     });
-
     catchItBtn.addEventListener('click', function() {
         window.location.href = '/arcade-1.html';
     });
-
     fishingFrenzyBtn.addEventListener('click', function() {
         const hasVisitedLighthouse = localStorage.getItem('hasVisitedLighthouse') === 'true';
         if (hasVisitedLighthouse) {
             window.location.href = '/fishing-frenzy-menu.html';
         }
     });
-
     arcadeBackBtn.addEventListener('click', function() {
         arcadeModal.style.display = 'none';
         hasEnteredArcade = false;
     });
-
     crownAwardModal.addEventListener('click', function(event) {
         if (event.target === crownAwardModal) {
             crownAwardModal.style.display = 'none';
         }
     });
-
     arcadeModal.addEventListener('click', function(event) {
         if (event.target === arcadeModal) {
             arcadeModal.style.display = 'none';
             hasEnteredArcade = false;
         }
     });
-
     inventoryModal.addEventListener('click', function(event) {
         if (event.target === inventoryModal) {
             inventoryModal.style.display = 'none';
             itemMenu.style.display = 'none';
         }
     });
-
     marketModal.addEventListener('click', function(event) {
         if (event.target === marketModal) {
             marketModal.style.display = 'none';
         }
     });
-
     function showPage(pageNum) {
         currentPage = pageNum;
-
         if (pageNum === 1) {
             newsPage1.style.display = 'flex';
             newsPage2.style.display = 'none';
@@ -1002,37 +942,73 @@ document.addEventListener('DOMContentLoaded', function() {
             pageDot3.style.background = 'white';
         }
     }
-
     nextPageBtn.addEventListener('click', function() {
         if (currentPage < 3) {
             showPage(currentPage + 1);
         }
     });
-
     prevPageBtn.addEventListener('click', function() {
         if (currentPage > 1) {
             showPage(currentPage - 1);
         }
     });
-
+    const moveSpeed = 300; 
+    const keysPressed = {};
+    function updateMovement() {
+        const rect = meeple.getBoundingClientRect();
+        let deltaX = 0;
+        let deltaY = 0;
+        if (keysPressed['w'] || keysPressed['W']) deltaY -= moveSpeed / 60; 
+        if (keysPressed['s'] || keysPressed['S']) deltaY += moveSpeed / 60;
+        if (keysPressed['a'] || keysPressed['A']) deltaX -= moveSpeed / 60;
+        if (keysPressed['d'] || keysPressed['D']) deltaX += moveSpeed / 60;
+        if (deltaX !== 0 || deltaY !== 0) {
+            const targetX = rect.left + deltaX;
+            const targetY = rect.top + deltaY;
+            moveMeeple(targetX, targetY);
+        }
+        if (arcadeModal.style.display === 'flex') {
+            const arcadeRect = arcade.getBoundingClientRect();
+            const isStillOverlapping = !(rect.right < arcadeRect.left ||
+                                       rect.left > arcadeRect.right ||
+                                       rect.bottom < arcadeRect.top ||
+                                       rect.top > arcadeRect.bottom);
+            if (!isStillOverlapping) {
+                arcadeModal.style.display = 'none';
+                hasEnteredArcade = false;
+            }
+        }
+        requestAnimationFrame(updateMovement);
+    }
+    document.addEventListener('keydown', function(event) {
+        const key = event.key.toLowerCase();
+        if (key.match(/[wasd]/)) {
+            keysPressed[event.key] = true;
+            event.preventDefault();
+        }
+    });
+    document.addEventListener('keyup', function(event) {
+        const key = event.key.toLowerCase();
+        if (key.match(/[wasd]/)) {
+            delete keysPressed[event.key];
+            event.preventDefault();
+        }
+    });
+    updateMovement();
     document.addEventListener('click', function(event) {
         if (playerMenu.style.display === 'block' && !playerMenu.contains(event.target) && event.target !== meeple) {
             playerMenu.style.display = 'none';
         }
-
         const isButton = event.target.tagName === 'BUTTON' || event.target.closest('button');
         const isInteractive = event.target === marketImg || event.target === newsBtn || event.target === meeple || event.target === inventoryBtn;
         const isItemMenu = event.target.closest('#item-menu');
-
         if (!isButton && !isInteractive && !isItemMenu) {
             const rect = meeple.getBoundingClientRect();
             const arcadeRect = arcade.getBoundingClientRect();
             let targetX = event.clientX - 128;
             let targetY = event.clientY - 128;
-
             moveMeeple(targetX, targetY);
         }
     });
-
 });
 </script>

@@ -1,18 +1,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
-<style>:root{--blue:#0066cc;--red:#cc0000;--green:#00aa00;--purple:#aa00aa;--white:#fff}
+<style>:root{--blue:#0066cc;--red:#cc0000;--green:#00aa00;--purple:#aa00aa;--orange:#ff8800;--white:#fff}
 body{background:url(/static/background.png)center/cover fixed;margin:0;padding:20px;min-height:100vh;font-family:'Fredoka One',cursive}
 .color-option[data-color=blue]{background:linear-gradient(135deg,var(--blue),#0099ff);border:3px solid var(--blue);box-shadow:0 4px 12px rgba(0,102,204,.3)}
 .color-option[data-color=red]{background:linear-gradient(135deg,var(--red),#ff3333);border:3px solid transparent;box-shadow:0 4px 12px rgba(0,0,0,.1)}
 .color-option[data-color=green]{background:linear-gradient(135deg,var(--green),#33cc33);border:3px solid transparent;box-shadow:0 4px 12px rgba(0,0,0,.1)}
 .color-option[data-color=purple]{background:linear-gradient(135deg,var(--purple),#cc33cc);border:3px solid transparent;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.color-option[data-color=orange]{background:linear-gradient(135deg,var(--orange),#ffaa33);border:3px solid transparent;box-shadow:0 4px 12px rgba(0,0,0,.1)}
 .color-option.active{border-color:#333!important;transform:scale(1.05);box-shadow:0 4px 16px rgba(0,0,0,.3)!important}
 .color-option:hover{transform:scale(1.1);box-shadow:0 6px 20px rgba(0,0,0,.2)!important}
 </style>
 
 <div class="flex items-center justify-center gap-5 mx-auto my-12 p-8 max-w-2xl">
     <img id="meeple-image" src="/static/meeple-blue.png" alt="Meeple" class="w-16 drop-shadow-lg">
-    <div class="text-left"><h1 class="text-5xl font-normal text-white m-0 tracking-tight">Meeple</h1><h2 class="text-2xl font-normal text-white m-0 tracking-wider">Quest</h2></div>
+    <div class="text-left">
+        <h1 class="text-5xl font-normal text-white m-0 tracking-tight">
+            <span id="m-letter" class="cursor-pointer hover:text-orange-300 transition-colors duration-300">M</span><span>eeple</span>
+        </h1>
+        <h2 class="text-2xl font-normal text-white m-0 tracking-wider">Quest</h2>
+    </div>
 </div>
 
 <div class="relative mx-auto my-10 max-w-4xl h-[422px] bg-cover bg-center rounded-xl overflow-hidden" style="background-image: url('/static/textbg.png');">
@@ -23,6 +29,7 @@ body{background:url(/static/background.png)center/cover fixed;margin:0;padding:2
             <div class="color-option w-16 h-16 rounded-full cursor-pointer transition-all duration-300 flex items-center justify-center text-white font-bold text-sm border-2 border-white shadow-lg" data-color="red" onclick="selectColor('red')">Red</div>
             <div class="color-option w-16 h-16 rounded-full cursor-pointer transition-all duration-300 flex items-center justify-center text-white font-bold text-sm border-2 border-white shadow-lg" data-color="green" onclick="selectColor('green')">Green</div>
             <div class="color-option w-16 h-16 rounded-full cursor-pointer transition-all duration-300 flex items-center justify-center text-white font-bold text-sm border-2 border-white shadow-lg" data-color="purple" onclick="selectColor('purple')">Purple</div>
+            <div id="orange-option" class="color-option w-16 h-16 rounded-full cursor-pointer transition-all duration-300 flex items-center justify-center text-white font-bold text-sm border-2 border-white shadow-lg opacity-0 scale-0" data-color="orange" onclick="selectColor('orange')" style="display: none;">Orange</div>
         </div>
         <h3 id="name-header" class="text-2xl text-white font-normal mb-6 tracking-wide transition-all duration-300">Name Your Meeple</h3>
         <div id="input-container" class="w-full max-w-sm transition-transform duration-300">
@@ -37,5 +44,6 @@ body{background:url(/static/background.png)center/cover fixed;margin:0;padding:2
 function selectColor(c){document.getElementById('meeple-image').src=`/static/meeple-${c}.png`;document.querySelectorAll('.color-option').forEach(o=>{o.classList.toggle('active',o.dataset.color===c)});localStorage.setItem('selectedMeepleColor', c)}
 function updateGreeting(){const n=document.getElementById('player-name'),g=document.getElementById('greeting'),b=document.getElementById('start-btn'),h=document.getElementById('name-header'),c=document.getElementById('input-container');const hasContent=n.value.trim()!=='';[g.style.opacity,b.style.opacity,h.style.opacity]=hasContent?['1','1','0']:['0','0','1'];c.style.transform=hasContent?'translateY(-24px)':'translateY(0)';g.textContent=hasContent?`Welcome to MeepleQuest, ${n.value.trim()}!`:''}
 function startQuest(){window.location.href='/play.html'}
-document.addEventListener('DOMContentLoaded',()=>document.getElementById('player-name').addEventListener('input',updateGreeting));
+function revealOrange(){const orangeOption=document.getElementById('orange-option');orangeOption.style.display='flex';setTimeout(()=>{orangeOption.style.opacity='1';orangeOption.style.transform='scale(1)'},10)}
+document.addEventListener('DOMContentLoaded',()=>{document.getElementById('player-name').addEventListener('input',updateGreeting);document.getElementById('m-letter').addEventListener('click',revealOrange)});
 </script>
