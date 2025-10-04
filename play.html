@@ -130,6 +130,18 @@ body {
 .coin-amount {
     font-weight: bold;
 }
+
+@media (max-width: 768px) {
+    #zoom-in-btn, #zoom-out-btn {
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 24px !important;
+    }
+
+    #zoom-in-btn:hover, #zoom-out-btn:hover {
+        transform: none !important;
+    }
+}
 </style>
     <div id="coin-counter" class="coin-display">
         <img src="/static/coin.png" alt="Coin" class="coin-icon">
@@ -211,10 +223,16 @@ body {
     </div>
 </div>
 <div id="map-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
-    <img src="/static/map.png" alt="Map" style="width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated;">
-    <div id="market-text" style="position: absolute; top: 25%; left: 30%; color: white; font-family: 'Georgia', serif; font-size: 2.25rem; font-weight: bold; z-index: 15; cursor: pointer;">Market</div>
-    <div id="lighthouse-text" style="position: absolute; top: 15%; left: 34.5%; color: black; font-family: 'Georgia', serif; font-size: 2.25rem; font-weight: bold; z-index: 15; cursor: pointer;">Lighthouse</div>
+    <div style="position: relative; width: 100%; height: 100%; overflow: hidden;">
+        <img id="map-image" src="/static/map.png" alt="Map" style="width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+        <div id="market-text" style="position: absolute; top: 25%; left: 30%; color: white; font-family: 'Georgia', serif; font-size: 2.25rem; font-weight: bold; z-index: 15; cursor: pointer; transform-origin: center; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);">Market</div>
+        <div id="lighthouse-text" style="position: absolute; top: 15%; left: 34.5%; color: black; font-family: 'Georgia', serif; font-size: 2.25rem; font-weight: bold; z-index: 15; cursor: pointer; transform-origin: center; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);">Lighthouse</div>
+    </div>
     <button id="close-map-modal-btn" style="position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; z-index: 20;">×</button>
+    <div style="position: absolute; bottom: 1rem; right: 1rem; display: flex; flex-direction: column; gap: 0.5rem; z-index: 25;">
+        <button id="zoom-in-btn" style="width: 50px; height: 50px; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; font-size: 24px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; display: flex; align-items: center; justify-content: center;">+</button>
+        <button id="zoom-out-btn" style="width: 50px; height: 50px; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; font-size: 24px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; display: flex; align-items: center; justify-content: center;">−</button>
+    </div>
 </div>
 <div id="player-menu" style="display: none; position: absolute; background: url(/static/textbg.png) center/cover; padding: 3rem; border-radius: 15px; image-rendering: pixelated; z-index: 200; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 200px;">
     <button id="close-player-menu-btn" style="position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 30px; height: 30px; font-size: 18px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive;">×</button>
@@ -349,6 +367,34 @@ document.addEventListener('DOMContentLoaded', function() {
     const arcadeBackBtn = document.getElementById('arcade-back-btn');
     let selectedItemForEquip = null;
     let currentlyEquippedItem = localStorage.getItem('currentlyEquippedItem') || null;
+
+    let mapScale = 1;
+    const zoomInBtn = document.getElementById('zoom-in-btn');
+    const zoomOutBtn = document.getElementById('zoom-out-btn');
+
+    function updateMapTransform() {
+        const mapImage = document.getElementById('map-image');
+        const marketText = document.getElementById('market-text');
+        const lighthouseText = document.getElementById('lighthouse-text');
+        const transformValue = `scale(${mapScale})`;
+        mapImage.style.transform = transformValue;
+        if (marketText) marketText.style.transform = transformValue;
+        if (lighthouseText) lighthouseText.style.transform = transformValue;
+    }
+
+    function zoomIn() {
+        if (mapScale < 3) {
+            mapScale = Math.min(mapScale * 1.2, 3);
+            updateMapTransform();
+        }
+    }
+
+    function zoomOut() {
+        if (mapScale > 0.5) {
+            mapScale = Math.max(mapScale / 1.2, 0.5);
+            updateMapTransform();
+        }
+    }
     function updateHatDisplay() {
         if (currentlyEquippedItem) {
             if (currentlyEquippedItem === 'Hat') {
@@ -691,9 +737,22 @@ document.addEventListener('DOMContentLoaded', function() {
     mapBtn.addEventListener('click', function(event) {
         event.stopPropagation();
         mapModal.style.display = 'flex';
+        mapScale = 1;
+        updateMapTransform();
         marketText.classList.add('current-location');
         lighthouseText.classList.remove('current-location');
     });
+
+    zoomInBtn.addEventListener('click', function(event) {
+        event.stopPropagation();
+        zoomIn();
+    });
+
+    zoomOutBtn.addEventListener('click', function(event) {
+        event.stopPropagation();
+        zoomOut();
+    });
+
     const marketText = document.getElementById('market-text');
     marketText.addEventListener('click', function(event) {
         event.stopPropagation();
