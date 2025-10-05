@@ -498,6 +498,10 @@ document.addEventListener('DOMContentLoaded', function() {
         collectibleCoin.style.display = 'block';
     }
     function moveMeeple(targetX, targetY) {
+        const playerWidth = 256;
+        const playerHeight = 256;
+        targetX = Math.max(0, Math.min(targetX, window.innerWidth - playerWidth));
+        targetY = Math.max(0, Math.min(targetY, window.innerHeight - playerHeight));
         const rect = meeple.getBoundingClientRect();
         const currentX = rect.left;
         const currentY = rect.top;
@@ -545,6 +549,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const dy = e.clientY - startY;
             currentX = initialX + dx;
             currentY = initialY + dy;
+            const elementRect = element.getBoundingClientRect();
+            const elementWidth = elementRect.width;
+            const elementHeight = elementRect.height;
+            currentX = Math.max(0, Math.min(currentX, window.innerWidth - elementWidth));
+            currentY = Math.max(0, Math.min(currentY, window.innerHeight - elementHeight));
             element.style.left = currentX + 'px';
             element.style.top = currentY + 'px';
             element.style.right = 'auto';
@@ -894,10 +903,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const rect = meeple.getBoundingClientRect();
         let deltaX = 0;
         let deltaY = 0;
-        if (keysPressed['w'] || keysPressed['W']) deltaY -= moveSpeed / 60; 
-        if (keysPressed['s'] || keysPressed['S']) deltaY += moveSpeed / 60;
-        if (keysPressed['a'] || keysPressed['A']) deltaX -= moveSpeed / 60;
-        if (keysPressed['d'] || keysPressed['D']) deltaX += moveSpeed / 60;
+        const currentSpeed = keysPressed['Shift'] ? moveSpeed * 2 : moveSpeed;
+        if (keysPressed['w'] || keysPressed['W']) deltaY -= currentSpeed / 60;
+        if (keysPressed['s'] || keysPressed['S']) deltaY += currentSpeed / 60;
+        if (keysPressed['a'] || keysPressed['A']) deltaX -= currentSpeed / 60;
+        if (keysPressed['d'] || keysPressed['D']) deltaX += currentSpeed / 60;
         if (deltaX !== 0 || deltaY !== 0) {
             const targetX = rect.left + deltaX;
             const targetY = rect.top + deltaY;
@@ -911,6 +921,9 @@ document.addEventListener('DOMContentLoaded', function() {
             keysPressed[event.key] = true;
             event.preventDefault();
         }
+        if (event.key === 'Shift') {
+            keysPressed['Shift'] = true;
+        }
     });
     document.addEventListener('keyup', function(event) {
         const key = event.key.toLowerCase();
@@ -918,8 +931,26 @@ document.addEventListener('DOMContentLoaded', function() {
             delete keysPressed[event.key];
             event.preventDefault();
         }
+        if (event.key === 'Shift') {
+            delete keysPressed['Shift'];
+        }
     });
     updateMovement();
+    window.addEventListener('resize', function() {
+        const playerWidth = 256;
+        const playerHeight = 256;
+        const meepleRect = meeple.getBoundingClientRect();
+        let newLeft = parseFloat(meeple.style.left) || meepleRect.left;
+        let newTop = parseFloat(meeple.style.top) || meepleRect.top;
+        newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - playerWidth));
+        newTop = Math.max(0, Math.min(newTop, window.innerHeight - playerHeight));
+        meeple.style.left = newLeft + 'px';
+        meeple.style.top = newTop + 'px';
+        if (currentlyEquippedItem) {
+            equippedHat.style.left = (newLeft + meeple.clientWidth / 2 - 32) + 'px';
+            equippedHat.style.top = (newTop + 10) + 'px';
+        }
+    });
     document.addEventListener('click', function(event) {
         if (playerMenu.style.display === 'block' && !playerMenu.contains(event.target) && event.target !== meeple) {
             playerMenu.style.display = 'none';

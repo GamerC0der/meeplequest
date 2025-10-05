@@ -1,47 +1,42 @@
-from flask import Flask, render_template, redirect
+import os
+import glob
+from flask import Flask, redirect
 
 app = Flask(__name__)
-app.template_folder = '.'
+
+app.config.update(
+    DEBUG=os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
+)
+
+def render_page(template_name):
+    try:
+        with open(template_name, 'r', encoding='utf-8') as f:
+            content = f.read()
+        return content
+    except Exception as e:
+        app.logger.error(f"Error reading file {template_name}: {e}")
+        return f"Error loading page: {template_name}", 500
+
+def create_dynamic_route(template_name):
+    def route():
+        return render_page(template_name)
+    route.__name__ = f'{template_name.replace(".html", "").replace("-", "_")}_route'
+    return route
+
+html_files = [os.path.basename(f) for f in glob.glob('*.html') if f != 'index.html']
+
+for html_file in html_files:
+    route_path = f'/{html_file}'
+    func_name = html_file.replace('.html', '').replace('-', '_')
+    app.add_url_rule(route_path, func_name, create_dynamic_route(html_file))
 
 @app.route('/')
-def hello():
-    return render_template('index.html')
+def index():
+    return render_page('index.html')
 
 @app.route('/index.html')
 def index_redirect():
-    return redirect('/')   
-
-@app.route('/play.html')
-def play():
-    return render_template('play.html')
-
-@app.route('/play-2.html')
-def play_2():
-    return render_template('play-2.html')
-
-@app.route('/modal.html')
-def modal():
-    return render_template('modal.html')
-
-@app.route("/fishing-frenzy.html")
-def fishing_frenzy():
-    return render_template('fishing-frenzy.html')
-
-@app.route('/fishing-frenzy-menu.html')
-def fishing_frenzy_menu():
-    return render_template('fishing-frenzy-menu.html')
-
-@app.route('/arcade-menu.html')
-def arcade_menu():
-    return render_template('arcade-menu.html')
-
-@app.route('/arcade-1.html')
-def arcade_1():
-    return render_template('arcade-1.html')
-
-@app.route('/arcade-2.html')
-def arcade_2():
-    return render_template('arcade-2.html')
+    return redirect('/')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=app.config['DEBUG'])

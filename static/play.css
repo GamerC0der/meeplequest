@@ -1,0 +1,143 @@
+body {
+    background: url(/static/grass.png) center/cover fixed;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    position: relative;
+}
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+@keyframes itemFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes balloonsFloat {
+    0%, 100% {
+        transform: translate(-50%, -50%) translateY(0);
+    }
+    50% {
+        transform: translate(-50%, -50%) translateY(-5%);
+    }
+}
+@keyframes menuPopIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+#inventory-search:focus {
+    border-color: rgba(255,215,0,0.8) !important;
+}
+#inventory-content::-webkit-scrollbar {
+    width: 8px;
+}
+#inventory-content::-webkit-scrollbar-track {
+    background: rgba(139,69,19,0.1);
+    border-radius: 4px;
+}
+#inventory-content::-webkit-scrollbar-thumb {
+    background: rgba(139,69,19,0.5);
+    border-radius: 4px;
+}
+#inventory-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(139,69,19,0.7);
+}
+.modal-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#coin-counter {
+    user-select: none;
+    cursor: move;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.3);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+#coin-counter:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+}
+#coin-counter:active {
+    cursor: grabbing;
+}
+#map-btn {
+    user-select: none;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(8px);
+    border: 2px solid rgba(255,255,255,0.4);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+#map-btn:hover {
+    transform: scale(1.1);
+    border-color: rgba(255,255,255,0.8);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+#map-btn:active {
+    transform: scale(0.95);
+}
+.current-location {
+    color: #FFD700 !important;
+    font-weight: bold;
+}
+
+.coin-display {
+    position: fixed;
+    top: 2%;
+    right: 2%;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(0,0,0,0.7);
+    padding: 0.5% 1%;
+    border-radius: 10px;
+    color: white;
+    font-size: 1.5vw;
+    z-index: 100;
+    font-family: 'Fredoka One', cursive;
+}
+
+.coin-icon {
+    width: 2vw;
+    height: 2vw;
+    image-rendering: pixelated;
+}
+
+.coin-amount {
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    #zoom-in-btn, #zoom-out-btn {
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 24px !important;
+    }
+
+    #zoom-in-btn:hover, #zoom-out-btn:hover {
+        transform: none !important;
+    }
+}

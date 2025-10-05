@@ -6,147 +6,40 @@
     <title>MeepleQuest</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        :root {
-            --blue: #0066cc;
-            --red: #cc0000;
-            --green: #00aa00;
-            --purple: #aa00aa;
-            --orange: #ff8800;
-            --white: #fff;
-        }
-
-        * { box-sizing: border-box; }
-
-        body {
-            background: url(/static/background.png) center/cover fixed;
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            font-family: 'Fredoka One', cursive;
-        }
-
-        .color-option[data-color=blue] {
-            background: linear-gradient(135deg, var(--blue), #0099ff);
-            border: 3px solid var(--blue);
-            box-shadow: 0 4px 12px rgba(0,102,204,.3);
-        }
-
-        .color-option[data-color=red] {
-            background: linear-gradient(135deg, var(--red), #ff3333);
-            border: 3px solid transparent;
-            box-shadow: 0 4px 12px rgba(0,0,0,.1);
-        }
-
-        .color-option[data-color=green] {
-            background: linear-gradient(135deg, var(--green), #33cc33);
-            border: 3px solid transparent;
-            box-shadow: 0 4px 12px rgba(0,0,0,.1);
-        }
-
-        .color-option[data-color=purple] {
-            background: linear-gradient(135deg, var(--purple), #cc33cc);
-            border: 3px solid transparent;
-            box-shadow: 0 4px 12px rgba(0,0,0,.1);
-        }
-
-        .color-option[data-color=orange] {
-            background: linear-gradient(135deg, var(--orange), #ffaa33);
-            border: 3px solid transparent;
-            box-shadow: 0 4px 12px rgba(0,0,0,.1);
-        }
-
-        .color-option.active {
-            border-color: #333 !important;
-            transform: scale(1.05);
-            box-shadow: 0 4px 16px rgba(0,0,0,.3) !important;
-        }
-
-        .color-option:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(0,0,0,.2) !important;
-        }
-    </style>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
-<div class="flex items-center justify-center gap-5 mx-auto my-12 p-8 max-w-2xl">
-    <img id="meeple-image" src="/static/meeple-blue.png" alt="Meeple" class="w-16 drop-shadow-lg">
+<header class="flex items-center justify-center gap-5 mx-auto my-12 p-8 max-w-2xl" role="banner">
+    <img id="meeple-image" src="/static/meeple-blue.png" alt="Selected meeple character" class="w-16 drop-shadow-lg">
     <div class="text-left">
         <h1 class="text-5xl font-normal text-white m-0 tracking-tight">
-            <span id="m-letter" class="cursor-pointer hover:text-orange-300 transition-colors duration-300">M</span><span>eeple</span>
+            <span id="m-letter" class="cursor-pointer hover:text-orange-300 transition-colors duration-300" role="button" tabindex="0" aria-label="Click to reveal orange meeple color option">M</span><span>eeple</span>
         </h1>
         <h2 class="text-2xl font-normal text-white m-0 tracking-wider">Quest</h2>
     </div>
-</div>
+</header>
 
 <div class="relative mx-auto my-10 max-w-4xl h-[422px] bg-cover bg-center rounded-xl overflow-hidden" style="background-image: url('/static/textbg.png');">
     <div class="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-center items-center text-center p-8">
         <h3 class="text-2xl text-white font-normal mb-8 tracking-wide">Choose Your Meeple Color</h3>
-        <div class="flex justify-center gap-6 flex-wrap mb-8">
-            <div class="color-option active w-16 h-16 rounded-full cursor-pointer transition-all duration-300 flex items-center justify-center text-white font-bold text-sm border-2 border-white shadow-lg" data-color="blue" onclick="selectColor('blue')">Blue</div>
-            <div class="color-option w-16 h-16 rounded-full cursor-pointer transition-all duration-300 flex items-center justify-center text-white font-bold text-sm border-2 border-white shadow-lg" data-color="red" onclick="selectColor('red')">Red</div>
-            <div class="color-option w-16 h-16 rounded-full cursor-pointer transition-all duration-300 flex items-center justify-center text-white font-bold text-sm border-2 border-white shadow-lg" data-color="green" onclick="selectColor('green')">Green</div>
-            <div class="color-option w-16 h-16 rounded-full cursor-pointer transition-all duration-300 flex items-center justify-center text-white font-bold text-sm border-2 border-white shadow-lg" data-color="purple" onclick="selectColor('purple')">Purple</div>
-            <div id="orange-option" class="color-option w-16 h-16 rounded-full cursor-pointer transition-all duration-300 flex items-center justify-center text-white font-bold text-sm border-2 border-white shadow-lg opacity-0 scale-0" data-color="orange" onclick="selectColor('orange')" style="display: none;">Orange</div>
+        <div class="flex justify-center gap-6 flex-wrap mb-8" role="radiogroup" aria-label="Select meeple color">
+            <button class="color-option active" data-color="blue" onclick="selectColor('blue')" role="radio" aria-checked="true" aria-label="Select blue meeple">Blue</button>
+            <button class="color-option" data-color="red" onclick="selectColor('red')" role="radio" aria-checked="false" aria-label="Select red meeple">Red</button>
+            <button class="color-option" data-color="green" onclick="selectColor('green')" role="radio" aria-checked="false" aria-label="Select green meeple">Green</button>
+            <button class="color-option" data-color="purple" onclick="selectColor('purple')" role="radio" aria-checked="false" aria-label="Select purple meeple">Purple</button>
+            <button id="orange-option" class="color-option opacity-0 scale-0" data-color="orange" onclick="selectColor('orange')" role="radio" aria-checked="false" aria-label="Select orange meeple" style="display: none;">Orange</button>
         </div>
         <h3 id="name-header" class="text-2xl text-white font-normal mb-6 tracking-wide transition-all duration-300">Name Your Meeple</h3>
         <div id="input-container" class="w-full max-w-sm transition-transform duration-300">
-            <input id="player-name" placeholder="Your meeple name..." maxlength="25" class="w-full p-4 text-base bg-white bg-opacity-90 border-2 border-white rounded-xl outline-none transition-all duration-300 focus:bg-white focus:border-blue-500 box-border text-gray-800 placeholder-gray-500">
-            <p id="greeting" class="my-4 text-lg text-white opacity-0 transition-opacity duration-300 font-medium"></p>
-            <button id="start-btn" onclick="startQuest()" class="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white border-none rounded-xl cursor-pointer opacity-0 transition-all duration-300 shadow-lg hover:shadow-xl font-medium tracking-wide">Start Quest</button>
+            <label for="player-name" class="sr-only">Enter your meeple name</label>
+            <input id="player-name" type="text" placeholder="Your meeple name..." maxlength="25" aria-describedby="greeting" class="w-full p-4 text-base bg-white bg-opacity-90 border-2 border-white rounded-xl outline-none transition-all duration-300 focus:bg-white focus:border-blue-500 box-border text-gray-800 placeholder-gray-500">
+            <p id="greeting" class="my-4 text-lg text-white opacity-0 transition-opacity duration-300 font-medium" aria-live="polite" role="status"></p>
+            <button id="start-btn" onclick="startQuest()" class="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white border-none rounded-xl cursor-pointer opacity-0 transition-all duration-300 shadow-lg hover:shadow-xl font-medium tracking-wide" aria-describedby="greeting">Start Quest</button>
         </div>
     </div>
 </div>
 
-    <script>
-        function selectColor(color) {
-            document.getElementById('meeple-image').src = `/static/meeple-${color}.png`;
-            document.querySelectorAll('.color-option').forEach(option => {
-                option.classList.toggle('active', option.dataset.color === color);
-            });
-            localStorage.setItem('selectedMeepleColor', color);
-        }
-
-        function updateGreeting() {
-            const nameInput = document.getElementById('player-name');
-            const greeting = document.getElementById('greeting');
-            const startBtn = document.getElementById('start-btn');
-            const nameHeader = document.getElementById('name-header');
-            const inputContainer = document.getElementById('input-container');
-
-            const hasContent = nameInput.value.trim() !== '';
-            [greeting.style.opacity, startBtn.style.opacity, nameHeader.style.opacity] = hasContent ? ['1', '1', '0'] : ['0', '0', '1'];
-            inputContainer.style.transform = hasContent ? 'translateY(-24px)' : 'translateY(0)';
-            greeting.textContent = hasContent ? `Welcome to MeepleQuest, ${nameInput.value.trim()}!` : '';
-        }
-
-        function startQuest() {
-            window.location.href = '/play.html';
-        }
-
-        function revealOrange() {
-            const orangeOption = document.getElementById('orange-option');
-            orangeOption.style.display = 'flex';
-            setTimeout(() => {
-                orangeOption.style.opacity = '1';
-                orangeOption.style.transform = 'scale(1)';
-            }, 10);
-        }
-
-        document.addEventListener('contextmenu', e => {
-            e.preventDefault();
-            const menu = document.createElement('div');
-            menu.innerHTML = `<div style="position:fixed;top:${e.clientY}px;left:${e.clientX}px;background:#333;color:#fff;padding:10px;border-radius:8px;z-index:9999;font-family:'Fredoka One',cursive;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.5);"><div style="margin-bottom:8px;"><b>Navigation</b></div><div onclick="window.location.href='/arcade-menu.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🎮 Arcade</div><div onclick="window.location.href='/play.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🏰 Hub</div><div onclick="window.location.href='/fishing-frenzy-menu.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🎣 Fishing</div>`;
-            document.body.appendChild(menu);
-            setTimeout(() => menu.remove(), 5000);
-            document.addEventListener('click', () => menu.remove(), { once: true });
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('player-name').addEventListener('input', updateGreeting);
-            document.getElementById('m-letter').addEventListener('click', revealOrange);
-        });
-    </script>
+    <script src="/static/script.js"></script>
 </body>
 </html>
