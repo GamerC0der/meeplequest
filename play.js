@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (meepleRect.left > window.innerWidth * 0.85 && !hasEnteredRightRoom) {
             hasEnteredRightRoom = true;
-            window.location.href = '/play-2.html';
+            window.location.href = 'https://gamerc0der.github.io/meeplequest/play-2.html';
             return;
         }
         const meepleCenterX = meepleRect.left + meepleRect.width / 2;
@@ -697,12 +697,12 @@ document.addEventListener('DOMContentLoaded', function() {
         crownAwardModal.style.display = 'none';
     });
     catchGameBtn.addEventListener('click', function() {
-        window.location.href = '/arcade-1.html';
+        window.location.href = 'https://gamerc0der.github.io/meeplequest/arcade-1.html';
     });
     fishingFrenzyBtn.addEventListener('click', function() {
         const hasVisitedLighthouse = safeGetItem('hasVisitedLighthouse') === 'true';
         if (hasVisitedLighthouse) {
-            window.location.href = '/fishing-frenzy-menu.html';
+            window.location.href = 'https://gamerc0der.github.io/meeplequest/fishing-frenzy-menu.html';
         }
     });
     arcadeBackBtn.addEventListener('click', function() {
@@ -894,9 +894,9 @@ function createContextMenu(event) {
     `;
     menu.innerHTML = `
         <div style="margin-bottom: 8px;"><b>Navigation</b></div>
-        <div onclick="window.location.href='/index.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🏠 Home</div>
-        <div onclick="window.location.href='/arcade-menu.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🎮 Arcade</div>
-        <div onclick="window.location.href='/fishing-frenzy-menu.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🎣 Fishing</div>
+        <div onclick="window.location.href='https://gamerc0der.github.io/meeplequest/index.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🏠 Home</div>
+        <div onclick="window.location.href='https://gamerc0der.github.io/meeplequest/arcade-menu.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🎮 Arcade</div>
+        <div onclick="window.location.href='https://gamerc0der.github.io/meeplequest/fishing-frenzy-menu.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🎣 Fishing</div>
     `;
     document.body.appendChild(menu);
     setTimeout(() => menu.remove(), 5000);

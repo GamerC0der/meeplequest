@@ -465,7 +465,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (meepleRect.left < window.innerWidth * 0.15 && !hasEnteredLeftRoom) {
             hasEnteredLeftRoom = true;
-            window.location.href = '/play.html';
+            window.location.href = 'https://gamerc0der.github.io/meeplequest/play.html';
             return;
         }
         checkCoinCollection();
@@ -739,10 +739,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     catchGameBtn.addEventListener('click', function() {
-        window.location.href = '/arcade-1.html';
+        window.location.href = 'https://gamerc0der.github.io/meeplequest/arcade-1.html';
     });
     fishingFrenzyBtn.addEventListener('click', function() {
-        window.location.href = '/fishing-frenzy-menu.html';
+        window.location.href = 'https://gamerc0der.github.io/meeplequest/fishing-frenzy-menu.html';
     });
     lighthouseBackBtn.addEventListener('click', function() {
         lighthouseModal.style.display = 'none';
@@ -966,5 +966,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-document.addEventListener('contextmenu',e=>{e.preventDefault();const m=document.createElement('div');m.innerHTML=`<div style="position:fixed;top:${e.clientY}px;left:${e.clientX}px;background:#333;color:#fff;padding:10px;border-radius:8px;z-index:9999;font-family:'Fredoka One',cursive;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.5);"><div style="margin-bottom:8px;"><b>Navigation</b></div><div onclick="window.location.href='/index.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🏠 Home</div><div onclick="window.location.href='/play.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🏰 Castle</div><div onclick="window.location.href='/arcade-menu.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🎮 Arcade</div><div onclick="window.location.href='/fishing-frenzy-menu.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🎣 Fishing</div>`;document.body.appendChild(m);setTimeout(()=>{m.remove()},5000);document.addEventListener('click',()=>m.remove(),{once:true})});
+document.addEventListener('contextmenu',e=>{e.preventDefault();const m=document.createElement('div');m.innerHTML=`<div style="position:fixed;top:${e.clientY}px;left:${e.clientX}px;background:#333;color:#fff;padding:10px;border-radius:8px;z-index:9999;font-family:'Fredoka One',cursive;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.5);"><div style="margin-bottom:8px;"><b>Navigation</b></div><div onclick="window.location.href='https://gamerc0der.github.io/meeplequest/index.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🏠 Home</div><div onclick="window.location.href='https://gamerc0der.github.io/meeplequest/play.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🏰 Castle</div><div onclick="window.location.href='https://gamerc0der.github.io/meeplequest/arcade-menu.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🎮 Arcade</div><div onclick="window.location.href='https://gamerc0der.github.io/meeplequest/fishing-frenzy-menu.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🎣 Fishing</div>`;document.body.appendChild(m);setTimeout(()=>{m.remove()},5000);document.addEventListener('click',()=>m.remove(),{once:true})});
 </script>
