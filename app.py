@@ -1,8 +1,10 @@
 import os
 import glob
-from flask import Flask, redirect
+from flask import Flask, redirect, send_from_directory
 
-app = Flask(__name__)
+app = Flask(__name__,
+            static_url_path='',
+            static_folder='.')
 
 app.config.update(
     DEBUG=os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
@@ -22,6 +24,17 @@ def create_dynamic_route(template_name):
         return render_page(template_name)
     route.__name__ = f'{template_name.replace(".html", "").replace("-", "_")}_route'
     return route
+
+@app.route('/<path:filename>')
+def serve_static(filename):
+    # Serve static files (images, CSS, JS, etc.) that are not HTML
+    if '.' in filename and not filename.endswith('.html'):
+        try:
+            return send_from_directory('.', filename)
+        except FileNotFoundError:
+            return f"File not found: {filename}", 404
+    # If it's an HTML file or no extension, let the dynamic routes handle it
+    return render_page(filename) if os.path.exists(filename) else f"File not found: {filename}", 404
 
 html_files = [os.path.basename(f) for f in glob.glob('*.html') if f != 'index.html']
 

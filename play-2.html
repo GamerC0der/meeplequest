@@ -1,6 +1,6 @@
 <style>
 body {
-    background: url(/static/beach.png) center/cover fixed;
+    background: url(beach.png) center/cover fixed;
     margin: 0;
     padding: 0;
     min-height: 100vh;
@@ -127,22 +127,22 @@ body {
 }
 </style>
 <div id="coin-counter" style="position: fixed; top: 2%; right: 2%; display: flex; align-items: center; gap: 0.5rem; background: rgba(0,0,0,0.7); padding: 0.5% 1%; border-radius: 10px; color: white; font-size: 1.5vw; z-index: 100; font-family: 'Fredoka One', cursive;">
-    <img src="/static/coin.png" alt="Coin" style="width: 2vw; height: 2vw; image-rendering: pixelated;">
+    <img src="coin.png" alt="Coin" style="width: 2vw; height: 2vw; image-rendering: pixelated;">
     <span id="coin-count">0</span>
 </div>
-<img id="dragon" src="/static/dragon.png" alt="Dragon" style="position: fixed; top: 1rem; left: 50%; transform: translateX(-50%); width: 400px; height: auto; image-rendering: pixelated; z-index: 99; display: none; animation: dragonFly 8s ease-in-out infinite;">
-<img id="player-meeple" src="/static/meeple-blue.png" alt="Player Meeple" style="width: 256px; height: 256px; position: absolute; cursor: pointer; image-rendering: pixelated; z-index: 101;">
+<img id="dragon" src="dragon.png" alt="Dragon" style="position: fixed; top: 1rem; left: 50%; transform: translateX(-50%); width: 400px; height: auto; image-rendering: pixelated; z-index: 99; display: none; animation: dragonFly 8s ease-in-out infinite;">
+<img id="player-meeple" src="meeple-blue.png" alt="Player Meeple" style="width: 256px; height: 256px; position: absolute; cursor: pointer; image-rendering: pixelated; z-index: 101;">
 <img id="equipped-hat" src="" alt="Equipped Hat" style="width: 64px; height: 64px; position: absolute; image-rendering: pixelated; display: none; pointer-events: none;">
-<img id="lighthouse" src="/static/lighthouse.png" alt="Lighthouse" style="width: 500px; height: auto; position: absolute; right: 2rem; top: 50%; transform: translateY(-50%); image-rendering: pixelated;">
-<img id="collectible-coin" src="/static/coin.png" alt="Collectible Coin" style="width: 64px; height: 64px; position: absolute; right: 8rem; bottom: 4rem; image-rendering: pixelated; cursor: pointer;">
-<img id="market" src="/static/market.png" alt="Market" style="width: 300px; height: auto; position: absolute; left: 50%; top: 20%; transform: translate(-50%, -50%); image-rendering: pixelated; z-index: 98;">
+<img id="lighthouse" src="lighthouse.png" alt="Lighthouse" style="width: 500px; height: auto; position: absolute; right: 2rem; top: 50%; transform: translateY(-50%); image-rendering: pixelated;">
+<img id="collectible-coin" src="coin.png" alt="Collectible Coin" style="width: 64px; height: 64px; position: absolute; right: 8rem; bottom: 4rem; image-rendering: pixelated; cursor: pointer;">
+<img id="market" src="market.png" alt="Market" style="width: 300px; height: auto; position: absolute; left: 50%; top: 20%; transform: translate(-50%, -50%); image-rendering: pixelated; z-index: 98;">
 <button id="map-btn" style="position: fixed; right: 2%; bottom: 3%; background: rgba(0,0,0,0.7); border: 2px solid white; border-radius: 10px; padding: 0.5rem; cursor: pointer; z-index: 100;">
     <svg width="2vw" height="2vw" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" fill="white"/>
     </svg>
 </button>
 <div id="welcome-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000;" class="modal-center">
-    <div style="background: url(/static/textbg.png) center/cover; width: 80%; height: 80%; max-width: 600px; max-height: 400px; border-radius: 20px; position: relative; image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
+    <div style="background: url(textbg.png) center/cover; width: 80%; height: 80%; max-width: 600px; max-height: 400px; border-radius: 20px; position: relative; image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
         <h1 style="color: #8B4513; font-family: 'Georgia', serif; font-size: 3rem; font-weight: bold; text-transform: uppercase; margin: 0 0 2rem 0; text-shadow: 3px 3px 6px rgba(0,0,0,0.9); -webkit-text-stroke: 1px #2F1B14;">Welcome!</h1>
         <p style="color: #2F1B14; font-family: 'Times New Roman', serif; font-size: 1.2rem; line-height: 1.6; margin: 0 0 2rem 0; text-align: center;">Welcome to the lighthouse! Click the button below to read the latest news.</p>
         <button id="modal-news-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 10px; padding: 1rem 2rem; font-family: 'Fredoka One', cursive; font-size: 1.5rem; font-weight: bold; cursor: pointer; backdrop-filter: blur(10px); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">📰 Read News</button>
@@ -150,7 +150,7 @@ body {
     </div>
 </div>
 <div id="news-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;" class="modal-center">
-    <div style="background: url(/static/textbg.png) center/cover; width: 80%; height: 80%; max-width: 800px; max-height: 600px; border-radius: 20px; position: relative; image-rendering: pixelated;">
+    <div style="background: url(textbg.png) center/cover; width: 80%; height: 80%; max-width: 800px; max-height: 600px; border-radius: 20px; position: relative; image-rendering: pixelated;">
         <div style="position: absolute; top: 2rem; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10;">
             <h1 style="color: #2F1B14; font-family: 'Georgia', 'Times New Roman', serif; font-size: 3rem; font-weight: bold; text-shadow: 3px 3px 6px rgba(0,0,0,0.9); margin: 0; text-transform: uppercase; letter-spacing: 0.15em; -webkit-text-stroke: 1px #8B4513;">THE SIEGE TIMES</h1>
             <div style="color: #8B4513; font-family: 'Times New Roman', serif; font-size: 1.2rem; font-weight: bold; margin-top: 0.5rem;">Sep 30, 2025</div>
@@ -163,10 +163,10 @@ body {
         </div>
         <div id="news-page-1" style="position: absolute; bottom: 0; left: 0; right: 0; height: 50%; background: rgba(255,255,255,0.95); border-radius: 0 0 20px 20px; padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center;">
             <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-                <img src="/static/meeple-blue.png" alt="Blue Meeple" style="width: 80px; height: 80px; image-rendering: pixelated;">
-                <img src="/static/meeple-green.png" alt="Green Meeple" style="width: 80px; height: 80px; image-rendering: pixelated;">
-                <img src="/static/meeple-purple.png" alt="Purple Meeple" style="width: 80px; height: 80px; image-rendering: pixelated;">
-                <img src="/static/meeple-red.png" alt="Red Meeple" style="width: 80px; height: 80px; image-rendering: pixelated;">
+                <img src="meeple-blue.png" alt="Blue Meeple" style="width: 80px; height: 80px; image-rendering: pixelated;">
+                <img src="meeple-green.png" alt="Green Meeple" style="width: 80px; height: 80px; image-rendering: pixelated;">
+                <img src="meeple-purple.png" alt="Purple Meeple" style="width: 80px; height: 80px; image-rendering: pixelated;">
+                <img src="meeple-red.png" alt="Red Meeple" style="width: 80px; height: 80px; image-rendering: pixelated;">
             </div>
             <h2 style="color: #8B4513; font-family: 'Georgia', serif; font-size: 1.2rem; font-weight: bold; text-transform: uppercase; margin: 0 0 0.5rem 0; text-align: center;">
                 The Siege
@@ -177,7 +177,7 @@ body {
         </div>
         <div id="news-page-2" style="position: absolute; bottom: 0; left: 0; right: 0; height: 50%; background: rgba(255,255,255,0.95); border-radius: 0 0 20px 20px; padding: 2rem; display: none; flex-direction: column; align-items: center; justify-content: center;">
             <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                <img src="/static/coin.png" alt="Coin" style="width: 60px; height: 60px; image-rendering: pixelated; margin-right: 1rem;">
+                <img src="coin.png" alt="Coin" style="width: 60px; height: 60px; image-rendering: pixelated; margin-right: 1rem;">
                 <h2 style="color: #8B4513; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold; text-transform: uppercase; margin: 0;">
                     Coins
                 </h2>
@@ -191,7 +191,7 @@ body {
 </div>
 <div id="map-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
     <div style="position: relative; width: 100%; height: 100%; overflow: hidden;">
-        <img id="map-image" src="/static/map.png" alt="Map" style="width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+        <img id="map-image" src="map.png" alt="Map" style="width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
         <div id="market-text" style="position: absolute; top: 25%; left: 30%; color: white; font-family: 'Georgia', serif; font-size: 2.25rem; font-weight: bold; z-index: 15; cursor: pointer; transform-origin: center; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);">Market</div>
         <div id="lighthouse-text" style="position: absolute; top: 15%; left: 34.5%; color: black; font-family: 'Georgia', serif; font-size: 2.25rem; font-weight: bold; z-index: 15; cursor: pointer; transform-origin: center; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);">Lighthouse</div>
     </div>
@@ -201,19 +201,19 @@ body {
         <button id="zoom-out-btn" style="width: 50px; height: 50px; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; font-size: 24px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; display: flex; align-items: center; justify-content: center;">−</button>
     </div>
 </div>
-<div id="player-menu" style="display: none; position: absolute; background: url(/static/textbg.png) center/cover; padding: 3rem; border-radius: 15px; image-rendering: pixelated; z-index: 200; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 200px;">
+<div id="player-menu" style="display: none; position: absolute; background: url(textbg.png) center/cover; padding: 3rem; border-radius: 15px; image-rendering: pixelated; z-index: 200; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 200px;">
     <button id="close-player-menu-btn" style="position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 30px; height: 30px; font-size: 18px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive;">×</button>
     <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
-        <img id="menu-meeple-img" src="/static/meeple-blue.png" alt="Meeple" style="width: 128px; height: 128px; image-rendering: pixelated; display: block;">
+        <img id="menu-meeple-img" src="meeple-blue.png" alt="Meeple" style="width: 128px; height: 128px; image-rendering: pixelated; display: block;">
         <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.9); padding: 0.5rem 1rem; border-radius: 8px;">
-            <img src="/static/coin.png" alt="Coin" style="width: 24px; height: 24px; image-rendering: pixelated;">
+            <img src="coin.png" alt="Coin" style="width: 24px; height: 24px; image-rendering: pixelated;">
             <span style="color: #2F1B14; font-family: 'Georgia', serif; font-size: 1.1rem; font-weight: bold;">Coins: <span id="menu-coin-count">0</span></span>
         </div>
         <button id="inventory-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 0.5rem 1rem; font-family: 'Georgia', serif; font-size: 1rem; font-weight: bold; cursor: pointer;">Inventory</button>
     </div>
 </div>
 <div id="inventory-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(20,20,20,0.85) 100%); backdrop-filter: blur(8px); z-index: 1200; animation: modalFadeIn 0.3s ease-out;">
-    <div style="background: url(/static/textbg.png) center/cover; width: 90%; height: 85%; max-width: 800px; max-height: 650px; border-radius: 24px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; padding: 2.5rem; box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); border: 3px solid rgba(139,69,19,0.3); animation: modalSlideIn 0.4s ease-out 0.1s forwards;">
+    <div style="background: url(textbg.png) center/cover; width: 90%; height: 85%; max-width: 800px; max-height: 650px; border-radius: 24px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; padding: 2.5rem; box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); border: 3px solid rgba(139,69,19,0.3); animation: modalSlideIn 0.4s ease-out 0.1s forwards;">
         <button id="close-inventory-modal-btn" style="position: absolute; top: 1.5rem; right: 1.5rem; background: linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(30,30,30,0.9) 100%); color: white; border: 3px solid rgba(255,255,255,0.8); border-radius: 50%; width: 48px; height: 48px; font-size: 28px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; z-index: 20; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">&times;</button>
         <h1 style="color: #FFD700; font-family: 'Georgia', serif; font-size: 3rem; font-weight: bold; text-transform: uppercase; margin: 0 0 1.5rem 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); -webkit-text-stroke: 1px #8B4513; letter-spacing: 1px;">INVENTORY</h1>
         <div style="position: relative; width: 100%; max-width: 400px; margin-bottom: 2rem;">
@@ -231,17 +231,17 @@ body {
     </div>
 </div>
 <div id="crown-award-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1500;" class="modal-center">
-    <div style="background: url(/static/textbg.png) center/cover; width: 80%; height: 80%; max-width: 500px; max-height: 400px; border-radius: 20px; position: relative; image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
+    <div style="background: url(textbg.png) center/cover; width: 80%; height: 80%; max-width: 500px; max-height: 400px; border-radius: 20px; position: relative; image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
         <button id="close-crown-modal-btn" style="position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; z-index: 20;">×</button>
         <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
-            <img src="/static/crown.png" alt="Crown" style="width: 128px; height: 128px; image-rendering: pixelated;">
+            <img src="crown.png" alt="Crown" style="width: 128px; height: 128px; image-rendering: pixelated;">
             <h1 style="color: #FFD700; font-family: 'Georgia', serif; font-size: 2.5rem; font-weight: bold; text-transform: uppercase; margin: 0; text-align: center; text-shadow: 3px 3px 6px rgba(0,0,0,0.9); -webkit-text-stroke: 1px #2F1B14;">You earned a crown!</h1>
             <p style="color: #2F1B14; font-family: 'Times New Roman', serif; font-size: 1.2rem; line-height: 1.4; margin: 0; text-align: center;">You can equip it from your inventory.</p>
         </div>
     </div>
 </div>
 <div id="lighthouse-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1500;" class="modal-center">
-    <div style="background: url(/static/textbg.png) center/cover; width: 80%; height: 80%; max-width: 600px; max-height: 400px; border-radius: 20px; position: relative; image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
+    <div style="background: url(textbg.png) center/cover; width: 80%; height: 80%; max-width: 600px; max-height: 400px; border-radius: 20px; position: relative; image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
         <h1 style="color: #8B4513; font-family: 'Georgia', serif; font-size: 3rem; font-weight: bold; text-transform: uppercase; margin: 0 0 2rem 0; text-shadow: 3px 3px 6px rgba(0,0,0,0.9); -webkit-text-stroke: 1px #2F1B14;">LIGHTHOUSE</h1>
         <button id="catch-game-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 1rem 2rem; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold; cursor: pointer; margin-bottom: 1rem;">Catch It</button>
         <button id="fishing-frenzy-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 1rem 2rem; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold; cursor: pointer; margin-bottom: 2rem;">Fishing Frenzy</button>
@@ -249,7 +249,7 @@ body {
     </div>
 </div>
 <div id="market-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
-    <div style="background: url(/static/textbg.png) center/cover; width: 80%; height: 80%; max-width: 800px; max-height: 600px; border-radius: 20px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
+    <div style="background: url(textbg.png) center/cover; width: 80%; height: 80%; max-width: 800px; max-height: 600px; border-radius: 20px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
         <div id="market-tabs" style="position: absolute; top: -40px; left: 50%; transform: translateX(-50%); display: flex; gap: 2px; z-index: 60;">
             <div class="market-tab active" data-tab="shop" style="background: rgba(139, 69, 19, 0.9); color: white; padding: 8px 16px; border-radius: 8px 8px 0 0; cursor: pointer; font-family: 'Georgia', serif; font-size: 0.9rem; font-weight: bold; border: 2px solid #8B4513; border-bottom: none;">SHOP</div>
             <div class="market-tab" data-tab="news" style="background: rgba(139, 69, 19, 0.7); color: white; padding: 8px 16px; border-radius: 8px 8px 0 0; cursor: pointer; font-family: 'Georgia', serif; font-size: 0.9rem; font-weight: bold; border: 2px solid #8B4513; border-bottom: none;">NEWS</div>
@@ -259,12 +259,12 @@ body {
             <div style="display: flex; flex-direction: column; gap: 1.5rem; align-items: center;">
                 <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.9); padding: 1rem; border-radius: 10px; width: 300px; justify-content: space-between;">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <img src="/static/hat.png" alt="Hat" style="width: 48px; height: 48px; image-rendering: pixelated;">
+                        <img src="hat.png" alt="Hat" style="width: 48px; height: 48px; image-rendering: pixelated;">
                         <span style="color: #2F1B14; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold;">Hat</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 1rem;">
                         <div style="display: flex; align-items: center; gap: 0.5rem;">
-                            <img src="/static/coin.png" alt="Coin" style="width: 24px; height: 24px; image-rendering: pixelated;">
+                            <img src="coin.png" alt="Coin" style="width: 24px; height: 24px; image-rendering: pixelated;">
                             <span style="color: #8B4513; font-family: 'Georgia', serif; font-size: 1.2rem; font-weight: bold;">$100</span>
                         </div>
                         <button id="hat-buy-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 0.5rem 1rem; font-family: 'Georgia', serif; font-size: 1rem; font-weight: bold; cursor: pointer;">Buy</button>
@@ -272,12 +272,12 @@ body {
                 </div>
                 <div style="display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.9); padding: 1rem; border-radius: 10px; width: 300px; justify-content: space-between;">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <img src="/static/pirate_hat.png" alt="Pirate Hat" style="width: 48px; height: 48px; image-rendering: pixelated;">
+                        <img src="pirate_hat.png" alt="Pirate Hat" style="width: 48px; height: 48px; image-rendering: pixelated;">
                         <span style="color: #2F1B14; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold;">Pirate Hat</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 1rem;">
                         <div style="display: flex; align-items: center; gap: 0.5rem;">
-                            <img src="/static/coin.png" alt="Coin" style="width: 24px; height: 24px; image-rendering: pixelated;">
+                            <img src="coin.png" alt="Coin" style="width: 24px; height: 24px; image-rendering: pixelated;">
                             <span style="color: #8B4513; font-family: 'Georgia', serif; font-size: 1.2rem; font-weight: bold;">$250</span>
                         </div>
                         <button id="pirate-hat-buy-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 0.5rem 1rem; font-family: 'Georgia', serif; font-size: 1rem; font-weight: bold; cursor: pointer;">Buy</button>
@@ -369,11 +369,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateHatDisplay() {
         if (currentlyEquippedItem) {
             if (currentlyEquippedItem === 'Hat') {
-                equippedHat.src = '/static/hat.png';
+                equippedHat.src = 'hat.png';
             } else if (currentlyEquippedItem === 'Pirate Hat') {
-                equippedHat.src = '/static/pirate_hat.png';
+                equippedHat.src = 'pirate_hat.png';
             } else if (currentlyEquippedItem === 'Crown') {
-                equippedHat.src = '/static/crown.png';
+                equippedHat.src = 'crown.png';
             }
             equippedHat.style.display = 'block';
             positionHat();
@@ -416,8 +416,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const remainingTime = 30000 - (Date.now() - parseInt(lastCollectedTime));
         setTimeout(respawnCoin, remainingTime);
     }
-    meeple.src = `/static/meeple-${selectedColor}.png`;
-    menuMeepleImg.src = `/static/meeple-${selectedColor}.png`;
+    meeple.src = `meeple-${selectedColor}.png`;
+    menuMeepleImg.src = `meeple-${selectedColor}.png`;
     meeple.style.left = '50%';
     meeple.style.top = '50%';
     meeple.style.transform = 'translate(-50%, -50%)';
@@ -584,13 +584,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const crownEarned = localStorage.getItem('crownEarned') === 'true';
         const items = [];
         if (hatPurchased) {
-            items.push({ name: 'Hat', img: '/static/hat.png', rarity: 'common' });
+            items.push({ name: 'Hat', img: 'hat.png', rarity: 'common' });
         }
         if (pirateHatPurchased) {
-            items.push({ name: 'Pirate Hat', img: '/static/pirate_hat.png', rarity: 'rare' });
+            items.push({ name: 'Pirate Hat', img: 'pirate_hat.png', rarity: 'rare' });
         }
         if (crownEarned) {
-            items.push({ name: 'Crown', img: '/static/crown.png', rarity: 'legendary' });
+            items.push({ name: 'Crown', img: 'crown.png', rarity: 'legendary' });
         }
         const filteredItems = items.filter(item =>
             item.name.toLowerCase().includes(searchTerm.toLowerCase())

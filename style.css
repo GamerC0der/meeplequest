@@ -19,7 +19,7 @@
 * { box-sizing: border-box; }
 
 body {
-    background: url(/static/background.png) center/cover fixed;
+    background: url(background.png) center/cover fixed;
     margin: 0;
     padding: 20px;
     min-height: 100vh;

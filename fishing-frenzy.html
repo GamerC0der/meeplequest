@@ -7,7 +7,7 @@
             box-sizing: border-box;
         }
         body {
-            background: url(/static/beach.png) center/cover fixed;
+            background: url(beach.png) center/cover fixed;
             margin: 0; padding: 0; min-height: 100vh; width: 100vw;
             font-family: 'Fredoka One', cursive;
             image-rendering: pixelated;
@@ -61,7 +61,7 @@
 <body>
     <div id="display">Coins: <span id="score">0</span><br>Time: <span id="time">15</span></div>
     <div id="game-over-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 1000; justify-content: center; align-items: center;">
-        <div style="background: url(/static/textbg.png) center/cover; padding: 2rem; border-radius: 20px; text-align: center; max-width: 400px; width: 90%; image-rendering: pixelated;">
+        <div style="background: url(textbg.png) center/cover; padding: 2rem; border-radius: 20px; text-align: center; max-width: 400px; width: 90%; image-rendering: pixelated;">
             <h2 style="color: #8B4513; font-family: 'Georgia', serif; font-size: 2.5rem; font-weight: bold; text-transform: uppercase; margin: 0 0 1rem 0; text-shadow: 3px 3px 6px rgba(0,0,0,0.9); -webkit-text-stroke: 1px #2F1B14;">Time's Up!</h2>
             <p style="color: #2F1B14; font-family: 'Times New Roman', serif; font-size: 1.2rem; margin-bottom: 1rem;">Coins earned: <strong style="color: #FFD700;"><span id="final-coins">0</span></strong></p>
             <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1rem;">
@@ -142,10 +142,10 @@
             const isTrash = rand < 0.15 && !isGem;
 
             if (isGem) {
-                fish.src = '/static/diamond.png';
+                fish.src = 'diamond.png';
                 fish.alt = 'Gem';
             } else {
-                fish.src = isTrash ? '/static/trash.png' : (Math.random() < 0.5 ? '/static/fish.png' : '/static/red_fish.png');
+                fish.src = isTrash ? 'trash.png' : (Math.random() < 0.5 ? 'fish.png' : 'red_fish.png');
                 fish.alt = isTrash ? 'Trash' : 'Fish';
             }
 
@@ -284,14 +284,14 @@
                         if (fish.isGem && gemsCollected < 2 && Math.random() < 0.01) {
                             fish.isGem = true;
                             fish.isTrash = false;
-                            fish.element.src = '/static/diamond.png';
+                            fish.element.src = 'diamond.png';
                             fish.element.alt = 'Gem';
                         } else {
                             fish.isGem = false;
                             const rand = Math.random();
                             const isTrash = rand < 0.15;
                             fish.isTrash = isTrash;
-                            fish.element.src = isTrash ? '/static/trash.png' : (Math.random() < 0.5 ? '/static/fish.png' : '/static/red_fish.png');
+                            fish.element.src = isTrash ? 'trash.png' : (Math.random() < 0.5 ? 'fish.png' : 'red_fish.png');
                             fish.element.alt = isTrash ? 'Trash' : 'Fish';
                         }
 

@@ -5,7 +5,7 @@ function selectColor(color) {
     meepleImage.style.opacity = '0.7';
 
     setTimeout(() => {
-        meepleImage.src = `/static/meeple-${color}.png`;
+        meepleImage.src = `meeple-${color}.png`;
         meepleImage.style.transform = 'scale(1.1)';
         meepleImage.style.opacity = '1';
 

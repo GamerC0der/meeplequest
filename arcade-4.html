@@ -28,7 +28,7 @@
         }
 
         body {
-            background: url(/static/beach.png) center/cover fixed;
+            background: url(beach.png) center/cover fixed;
             margin: 0; padding: 0; min-height: 100vh;
             font-family: 'Fredoka One', cursive;
             image-rendering: pixelated;
@@ -123,7 +123,7 @@
                 const scoreCounter = document.getElementById('score-count');
 
                 const selectedColor = localStorage.getItem('selectedMeepleColor') || 'blue';
-                meeple.src = `/static/meeple-${selectedColor}.png`;
+                meeple.src = `meeple-${selectedColor}.png`;
                 document.body.classList.add('dark-mode');
 
                 gameState.groundY = CONFIG.GROUND_Y;
@@ -147,7 +147,7 @@
 
             function createObstacle() {
                 const obstacle = document.createElement('img');
-                obstacle.src = '/static/trash.png';
+                obstacle.src = 'trash.png';
                 obstacle.className = 'obstacle';
                 obstacle.style.left = window.innerWidth + 'px';
                 obstacle.style.bottom = '0px';
@@ -328,6 +328,6 @@
         <span id="score-count" class="score-amount">0</span>
     </div>
     <div class="ground-line"></div>
-    <img id="player-meeple-display" src="/static/meeple-blue.png" alt="Your Meeple" style="position: absolute;">
+    <img id="player-meeple-display" src="meeple-blue.png" alt="Your Meeple" style="position: absolute;">
 </body>
 </html>

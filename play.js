@@ -95,11 +95,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateHatDisplay() {
         if (currentlyEquippedItem) {
             if (currentlyEquippedItem === 'Hat') {
-                equippedHat.src = '/static/hat.png';
+                equippedHat.src = 'hat.png';
             } else if (currentlyEquippedItem === 'Pirate Hat') {
-                equippedHat.src = '/static/pirate_hat.png';
+                equippedHat.src = 'pirate_hat.png';
             } else if (currentlyEquippedItem === 'Crown') {
-                equippedHat.src = '/static/crown.png';
+                equippedHat.src = 'crown.png';
             }
             equippedHat.style.display = 'block';
             positionHat();
@@ -157,8 +157,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const remainingTime = 30000 - (Date.now() - parseInt(lastCollectedTime));
         setTimeout(respawnCoin, remainingTime);
     }
-    meeple.src = `/static/meeple-${selectedColor}.png`;
-    menuMeepleImg.src = `/static/meeple-${selectedColor}.png`;
+    meeple.src = `meeple-${selectedColor}.png`;
+    menuMeepleImg.src = `meeple-${selectedColor}.png`;
     meeple.style.left = '50%';
     meeple.style.top = '50%';
     meeple.style.transform = 'translate(-50%, -50%)';
@@ -528,13 +528,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const crownEarned = safeGetItem('crownEarned') === 'true';
         const items = [];
         if (hatPurchased) {
-            items.push({ name: 'Hat', img: '/static/hat.png', rarity: 'common' });
+            items.push({ name: 'Hat', img: 'hat.png', rarity: 'common' });
         }
         if (pirateHatPurchased) {
-            items.push({ name: 'Pirate Hat', img: '/static/pirate_hat.png', rarity: 'rare' });
+            items.push({ name: 'Pirate Hat', img: 'pirate_hat.png', rarity: 'rare' });
         }
         if (crownEarned) {
-            items.push({ name: 'Crown', img: '/static/crown.png', rarity: 'legendary' });
+            items.push({ name: 'Crown', img: 'crown.png', rarity: 'legendary' });
         }
         const filteredItems = items.filter(item =>
             item.name.toLowerCase().includes(searchTerm.toLowerCase())
