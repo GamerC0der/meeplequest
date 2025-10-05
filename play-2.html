@@ -160,7 +160,6 @@ body {
         <div style="position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.5rem; z-index: 15;">
             <div id="page-dot-1" style="width: 12px; height: 12px; border-radius: 50%; background: white; border: 2px solid #8B4513;"></div>
             <div id="page-dot-2" style="width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.5); border: 2px solid #8B4513;"></div>
-            <div id="page-dot-3" style="width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.5); border: 2px solid #8B4513;"></div>
         </div>
         <div id="news-page-1" style="position: absolute; bottom: 0; left: 0; right: 0; height: 50%; background: rgba(255,255,255,0.95); border-radius: 0 0 20px 20px; padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center;">
             <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
@@ -185,17 +184,6 @@ body {
             </div>
             <p style="color: #2F1B14; font-family: 'Times New Roman', serif; font-size: 0.9rem; line-height: 1.6; margin: 0; text-align: center; max-width: 400px;">
                 You can earn coins by completing minigames or walking around the castle. The coins on the castle reset every 30 seconds.
-            </p>
-        </div>
-        <div id="news-page-3" style="position: absolute; bottom: 0; left: 0; right: 0; height: 50%; background: rgba(255,255,255,0.95); border-radius: 0 0 20px 20px; padding: 2rem; display: none; flex-direction: column; align-items: center; justify-content: center;">
-            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                <img src="/static/crown.png" alt="Crown" style="width: 60px; height: 60px; image-rendering: pixelated; margin-right: 1rem;">
-                <h2 style="color: #8B4513; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold; text-transform: uppercase; margin: 0;">
-                    Crown!
-                </h2>
-            </div>
-            <p style="color: #2F1B14; font-family: 'Times New Roman', serif; font-size: 0.9rem; line-height: 1.6; margin: 0; text-align: center; max-width: 400px;">
-                Orpheus, when he returned from the islands of the summer, found that if you get a score above 50 on Catch It, a special item may be given.
             </p>
         </div>
         <button id="close-modal-btn" style="position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; font-weight: bold; cursor: pointer; font-family: 'Fredoka One', cursive; z-index: 20;">×</button>
@@ -255,7 +243,7 @@ body {
 <div id="lighthouse-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1500;" class="modal-center">
     <div style="background: url(/static/textbg.png) center/cover; width: 80%; height: 80%; max-width: 600px; max-height: 400px; border-radius: 20px; position: relative; image-rendering: pixelated; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
         <h1 style="color: #8B4513; font-family: 'Georgia', serif; font-size: 3rem; font-weight: bold; text-transform: uppercase; margin: 0 0 2rem 0; text-shadow: 3px 3px 6px rgba(0,0,0,0.9); -webkit-text-stroke: 1px #2F1B14;">LIGHTHOUSE</h1>
-        <button id="catch-it-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 1rem 2rem; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold; cursor: pointer; margin-bottom: 1rem;">Catch It</button>
+        <button id="catch-game-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 1rem 2rem; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold; cursor: pointer; margin-bottom: 1rem;">Catch It</button>
         <button id="fishing-frenzy-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid #8B4513; border-radius: 8px; padding: 1rem 2rem; font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold; cursor: pointer; margin-bottom: 2rem;">Fishing Frenzy</button>
         <button id="lighthouse-back-btn" style="background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 8px; padding: 0.75rem 1.5rem; font-family: 'Georgia', serif; font-size: 1rem; font-weight: bold; cursor: pointer;">Back</button>
     </div>
@@ -335,7 +323,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const crownAwardModal = document.getElementById('crown-award-modal');
     const closeCrownModalBtn = document.getElementById('close-crown-modal-btn');
     const lighthouseModal = document.getElementById('lighthouse-modal');
-    const catchItBtn = document.getElementById('catch-it-btn');
+    const catchGameBtn = document.getElementById('catch-game-btn');
     const fishingFrenzyBtn = document.getElementById('fishing-frenzy-btn');
     const lighthouseBackBtn = document.getElementById('lighthouse-back-btn');
     const marketModal = document.getElementById('market-modal');
@@ -448,7 +436,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             welcomeModal.style.display = 'flex';
             localStorage.setItem('welcomeShown', 'true');
-        }, 1000); // Show after 1 second
+        }, 1000);
     }
     setTimeout(checkProximity, 100);
     const pixelsPerSecond = 600;
@@ -741,7 +729,7 @@ document.addEventListener('DOMContentLoaded', function() {
             crownAwardModal.style.display = 'none';
         }
     });
-    catchItBtn.addEventListener('click', function() {
+    catchGameBtn.addEventListener('click', function() {
         window.location.href = '/arcade-1.html';
     });
     fishingFrenzyBtn.addEventListener('click', function() {
@@ -868,34 +856,21 @@ document.addEventListener('DOMContentLoaded', function() {
         if (pageNum === 1) {
             newsPage1.style.display = 'flex';
             newsPage2.style.display = 'none';
-            newsPage3.style.display = 'none';
             prevPageBtn.style.display = 'none';
             nextPageBtn.style.display = 'block';
             pageDot1.style.background = 'white';
             pageDot2.style.background = 'rgba(255,255,255,0.5)';
-            pageDot3.style.background = 'rgba(255,255,255,0.5)';
         } else if (pageNum === 2) {
             newsPage1.style.display = 'none';
             newsPage2.style.display = 'flex';
-            newsPage3.style.display = 'none';
-            prevPageBtn.style.display = 'block';
-            nextPageBtn.style.display = 'block';
-            pageDot1.style.background = 'rgba(255,255,255,0.5)';
-            pageDot2.style.background = 'white';
-            pageDot3.style.background = 'rgba(255,255,255,0.5)';
-        } else if (pageNum === 3) {
-            newsPage1.style.display = 'none';
-            newsPage2.style.display = 'none';
-            newsPage3.style.display = 'flex';
             prevPageBtn.style.display = 'block';
             nextPageBtn.style.display = 'none';
             pageDot1.style.background = 'rgba(255,255,255,0.5)';
-            pageDot2.style.background = 'rgba(255,255,255,0.5)';
-            pageDot3.style.background = 'white';
+            pageDot2.style.background = 'white';
         }
     }
     nextPageBtn.addEventListener('click', function() {
-        if (currentPage < 3) {
+        if (currentPage < 2) {
             showPage(currentPage + 1);
         }
     });

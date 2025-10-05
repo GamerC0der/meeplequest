@@ -116,7 +116,14 @@
                 collectedCoins: 0,
                 lastCoinSpawn: 0,
                 gameOver: false,
-                keysPressed: {}
+                keysPressed: {},
+                isJumping: false,
+                jumpCount: 0,
+                maxJumps: 2,
+                jumpVelocity: 0,
+                gravity: 0.8,
+                jumpPower: -20,
+                groundY: window.innerHeight * 0.65
             };
 
             function initializeGame() {
@@ -127,10 +134,12 @@
                 meeple.src = `/static/meeple-${selectedColor}.png`;
                 document.body.classList.add('dark-mode');
 
+                gameState.groundY = window.innerHeight * 0.65;
+
                 Object.assign(meeple.style, {
                     left: CONFIG.MEEPLE_POSITION.left,
-                    top: CONFIG.MEEPLE_POSITION.top,
-                    transform: 'translateY(-50%)',
+                    top: gameState.groundY + 'px',
+                    transform: 'none',
                     transition: 'left 0.05s ease-out'
                 });
 
@@ -270,6 +279,22 @@
                     meeple.style.left = targetX + 'px';
                 }
 
+                const currentY = rect.top;
+
+                if (gameState.isJumping || currentY < gameState.groundY) {
+                    gameState.jumpVelocity += gameState.gravity;
+                    const newY = currentY + gameState.jumpVelocity;
+
+                    if (newY >= gameState.groundY) {
+                        meeple.style.top = gameState.groundY + 'px';
+                        gameState.isJumping = false;
+                        gameState.jumpCount = 0;
+                        gameState.jumpVelocity = 0;
+                    } else {
+                        meeple.style.top = newY + 'px';
+                    }
+                }
+
                 requestAnimationFrame(updateMovement);
             }
 
@@ -304,6 +329,9 @@
             function showGameOver(message) {
                 const earnedCrown = gameState.collectedCoins > CONFIG.CROWN_THRESHOLD && !localStorage.getItem('crownEarned');
                 if (earnedCrown) localStorage.setItem('crownEarned', 'true');
+
+                const controlsIndicator = document.getElementById('controls-indicator');
+                if (controlsIndicator) controlsIndicator.style.display = 'none';
 
                 const modal = createStyledElement('div', `
                     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -346,7 +374,16 @@
                 if (key === 'a' || key === 'd') {
                     gameState.keysPressed[event.key] = pressed;
                     event.preventDefault();
+                } else if (key === ' ' && pressed && gameState.jumpCount < gameState.maxJumps) {
+                    jump();
+                    event.preventDefault();
                 }
+            }
+
+            function jump() {
+                gameState.isJumping = true;
+                gameState.jumpCount++;
+                gameState.jumpVelocity = gameState.jumpPower;
             }
 
             document.addEventListener('click', (event) => !gameState.gameOver && moveMeeple(event.clientX));
@@ -389,6 +426,9 @@
     <div id="coin-counter" class="coin-display">
         <img src="/static/coin.png" alt="Coin Icon" class="coin-icon">
         <span id="coin-count" class="coin-amount">0</span>
+    </div>
+    <div id="controls-indicator" style="position: fixed; bottom: 2rem; right: 2rem; background: rgba(0,0,0,0.7); padding: 0.5rem 1rem; border-radius: 10px; color: white; font-size: 1rem; font-family: 'Fredoka One', cursive; z-index: 100;">
+        Press <kbd style="background: rgba(255,255,255,0.2); padding: 0.2rem 0.4rem; border-radius: 3px; font-family: monospace;">SPACE</kbd> to Double Jump
     </div>
     <img id="player-meeple-display" src="/static/meeple-blue.png" alt="Your Meeple" style="position: absolute; width: 512px; height: 512px; image-rendering: pixelated;">
 </body>

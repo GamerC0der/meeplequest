@@ -43,6 +43,5 @@ def arcade_1():
 def arcade_2():
     return render_template('arcade-2.html')
 
-
 if __name__ == '__main__':
     app.run(debug=True)

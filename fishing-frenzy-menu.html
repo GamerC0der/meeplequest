@@ -69,8 +69,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const size = fishSizes[Math.floor(Math.random() * fishSizes.length)];
         const verticalPosition = Math.random() * (window.innerHeight - size);
-        const speed = 15 + Math.random() * 20; // Random speed between 15-35 seconds
-        const delay = Math.random() * 20; // Random delay up to 20 seconds
+        const speed = 15 + Math.random() * 20;
+        const delay = Math.random() * 20;
 
         fish.style.cssText = `
             width: ${size}px;

@@ -1,33 +1,101 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coin Catch</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     <style>
+        * { box-sizing: border-box; }
+
         body {
             background: url(/static/grass.png) center/cover fixed;
-            margin: 0; padding: 0; min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
             font-family: 'Fredoka One', cursive;
             image-rendering: pixelated;
             image-rendering: crisp-edges;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
+
+        .container { padding: 2rem; }
+
+        .title {
+            font-size: 4rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.25rem;
+            font-weight: bold;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover { transform: translateY(-2px); }
+        .btn.secondary { background: #3b82f6; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); }
     </style>
 </head>
 <body>
-    <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; text-align: center; padding: 2rem;">
-        <div>
-            <h1 style="font-size: 4rem; font-weight: bold; color: white; margin-bottom: 2rem; text-shadow: 0 0 10px rgba(0,0,0,0.8);">Catch It</h1>
-            <p style="font-size: 1.5rem; color: white; margin-bottom: 2rem; opacity: 0.9;">Coin Catching Minigame</p>
-            <div style="display: flex; gap: 1rem; justify-content: center;">
-                <button onclick="location.href='/arcade-2.html'" style="background: #10b981; color: white; border: none; padding: 1rem 2rem; font-size: 1.25rem; font-weight: bold; border-radius: 0.75rem; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
-                    Play
-                </button>
-                <button onclick="location.href='/play.html'" style="background: #3b82f6; color: white; border: none; padding: 1rem 2rem; font-size: 1.25rem; font-weight: bold; border-radius: 0.75rem; cursor: pointer; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);">
-                    Back to Hub
-                </button>
-            </div>
+    <div class="container">
+        <h1 class="title">Coin Catch</h1>
+        <p class="subtitle">Coin Catching Minigame</p>
+        <div class="button-group">
+            <button class="btn" onclick="location.href='/arcade-2.html'">Play</button>
+            <button class="btn secondary" onclick="location.href='/play.html'">Back to Hub</button>
         </div>
     </div>
-<script>
-document.addEventListener('contextmenu',e=>{e.preventDefault();const m=document.createElement('div');m.innerHTML=`<div style="position:fixed;top:${e.clientY}px;left:${e.clientX}px;background:#333;color:#fff;padding:10px;border-radius:8px;z-index:9999;font-family:'Fredoka One',cursive;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.5);"><div style="margin-bottom:8px;"><b>Navigation</b></div><div onclick="window.location.href='/index.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🏠 Home</div><div onclick="window.location.href='/play.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🏰 Hub</div><div onclick="window.location.href='/play-2.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🏖️ Beach</div><div onclick="window.location.href='/arcade-menu.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🎮 Arcade Menu</div><div onclick="window.location.href='/fishing-frenzy-menu.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🎣 Fishing</div>`;document.body.appendChild(m);setTimeout(()=>{m.remove()},5000);document.addEventListener('click',()=>m.remove(),{once:true})});
-</script>
+
+    <script>
+        let activeMenu = null;
+
+        function removeActiveMenu() {
+            if (activeMenu) {
+                activeMenu.remove();
+                activeMenu = null;
+            }
+        }
+
+        document.addEventListener('contextmenu', e => {
+            e.preventDefault();
+            removeActiveMenu();
+
+            const menu = document.createElement('div');
+            menu.innerHTML = `<div style="position:fixed;top:${e.clientY}px;left:${e.clientX}px;background:#333;color:#fff;padding:10px;border-radius:8px;z-index:9999;font-family:'Fredoka One',cursive;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.5);"><div style="margin-bottom:8px;"><b>Navigation</b></div><div onclick="window.location.href='/index.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🏠 Home</div><div onclick="window.location.href='/play.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🏰 Hub</div><div onclick="window.location.href='/play-2.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🏖️ Beach</div><div onclick="window.location.href='/arcade-menu.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🎮 Arcade Menu</div><div onclick="window.location.href='/fishing-frenzy-menu.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🎣 Fishing</div>`;
+            document.body.appendChild(menu);
+            activeMenu = menu;
+
+            setTimeout(() => removeActiveMenu(), 5000);
+        });
+
+        document.addEventListener('click', removeActiveMenu);
+    </script>
 </body>
 </html>

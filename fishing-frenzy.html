@@ -28,6 +28,21 @@
         #game-over-modal {
             display: none;
         }
+
+        @keyframes gemPopup {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -44,13 +59,12 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-        let score = 0, time = 15, gameOver = false;
+        let score = 0, time = 15, gameOver = false, gemCount = 0, gemsCollected = 0;
         const screenArea = window.innerWidth * window.innerHeight;
         const fishCount = Math.max(1, Math.min(5, Math.floor(screenArea / 80000)));
         document.getElementById('score').textContent = score;
         document.getElementById('time').textContent = time;
 
-        console.log('Game starting with time:', time, 'fishCount:', fishCount);
         class FishML {
             constructor() {
                 this.qTable = {};
@@ -96,11 +110,32 @@
             }
         }
         const fishes = [];
+        const gemPositions = [];
+        if (fishCount >= 3) {
+            const numStartGems = 1;
+            for (let g = 0; g < numStartGems; g++) {
+                let pos;
+                do {
+                    pos = Math.floor(Math.random() * fishCount);
+                } while (gemPositions.includes(pos));
+                gemPositions.push(pos);
+            }
+        }
+
         for (let i = 0; i < fishCount; i++) {
             const fish = document.createElement('img');
-            const isTrash = Math.random() < 0.15;
-            fish.src = isTrash ? '/static/trash.png' : (Math.random() < 0.5 ? '/static/fish.png' : '/static/red_fish.png');
-            fish.alt = isTrash ? 'Trash' : 'Fish';
+            const isGem = gemPositions.includes(i);
+            const rand = Math.random();
+            const isTrash = rand < 0.15 && !isGem;
+
+            if (isGem) {
+                fish.src = '/static/diamond.png';
+                fish.alt = 'Gem';
+            } else {
+                fish.src = isTrash ? '/static/trash.png' : (Math.random() < 0.5 ? '/static/fish.png' : '/static/red_fish.png');
+                fish.alt = isTrash ? 'Trash' : 'Fish';
+            }
+
             fish.style.cssText = 'position: absolute; width: 128px; height: 128px; image-rendering: pixelated; z-index: 10; pointer-events: none; user-select: none;';
             document.body.appendChild(fish);
             fishes.push({
@@ -110,6 +145,7 @@
                 directionX: (Math.random() - 0.5) * 4,
                 directionY: (Math.random() - 0.5) * 4,
                 isTrash: isTrash,
+                isGem: isGem,
                 ml: new FishML(),
                 lastState: null,
                 lastAction: null,
@@ -218,13 +254,34 @@
                     const rect = fish.element.getBoundingClientRect();
                     if (e.clientX >= rect.left && e.clientX <= rect.right &&
                         e.clientY >= rect.top && e.clientY <= rect.bottom) {
-                        if (fish.isTrash) {
+                        if (fish.isGem) {
+                            gemsCollected++;
+                            time = Math.min(99, time + 3);
+                            score += 5;
+                            document.getElementById('time').textContent = time;
+                            document.getElementById('score').textContent = score;
+                            showGemEarnedMessage();
+                        } else if (fish.isTrash) {
                             time = Math.max(0, time - 5);
                             document.getElementById('time').textContent = time;
                         } else {
                             score++;
                             document.getElementById('score').textContent = score;
                         }
+                        if (fish.isGem && gemsCollected < 2 && Math.random() < 0.01) {
+                            fish.isGem = true;
+                            fish.isTrash = false;
+                            fish.element.src = '/static/diamond.png';
+                            fish.element.alt = 'Gem';
+                        } else {
+                            fish.isGem = false;
+                            const rand = Math.random();
+                            const isTrash = rand < 0.15;
+                            fish.isTrash = isTrash;
+                            fish.element.src = isTrash ? '/static/trash.png' : (Math.random() < 0.5 ? '/static/fish.png' : '/static/red_fish.png');
+                            fish.element.alt = isTrash ? 'Trash' : 'Fish';
+                        }
+
                         fish.x = Math.random() * (window.innerWidth - 160) + 50;
                         fish.y = Math.random() * (window.innerHeight - 160) + 50;
                         fish.directionX = (Math.random() - 0.5) * 4;
@@ -237,6 +294,33 @@
                 });
             }
         });
+
+        function showGemEarnedMessage() {
+            const message = document.createElement('div');
+            message.textContent = 'GEM EARNED!';
+            message.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(45deg, gold, #FFD700);
+                color: #333;
+                padding: 20px 40px;
+                border-radius: 15px;
+                font-size: 2rem;
+                font-weight: bold;
+                font-family: 'Fredoka One', cursive;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+                z-index: 1000;
+                animation: gemPopup 0.8s ease-out;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            `;
+            document.body.appendChild(message);
+
+            setTimeout(() => {
+                message.remove();
+            }, 1500);
+        }
         });
 document.addEventListener('contextmenu',e=>{e.preventDefault();const m=document.createElement('div');m.innerHTML=`<div style="position:fixed;top:${e.clientY}px;left:${e.clientX}px;background:#333;color:#fff;padding:10px;border-radius:8px;z-index:9999;font-family:'Fredoka One',cursive;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.5);"><div style="margin-bottom:8px;"><b>Navigation</b></div><div onclick="window.location.href='/fishing-frenzy-menu.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🎣 Back to Fishing</div><div onclick="window.location.href='/index.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🏠 Home</div><div onclick="window.location.href='/play.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🏰 Hub</div><div onclick="window.location.href='/arcade-menu.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🎮 Arcade</div>`;document.body.appendChild(m);setTimeout(()=>{m.remove()},5000);document.addEventListener('click',()=>m.remove(),{once:true})});
     </script>

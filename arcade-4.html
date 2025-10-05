@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --modal-bg: rgba(255, 255, 255, 0.95);
+            --modal-text: #333;
+            --modal-text-secondary: #666;
+            --modal-button-bg: #4CAF50;
+            --modal-button-secondary: #2196F3;
+            --coin-counter-bg: rgba(0,0,0,0.7);
+            --modal-overlay: rgba(0, 0, 0, 0.8);
+            --modal-padding: 2rem;
+            --modal-radius: 20px;
+            --modal-z-index: 1000;
+            --button-radius: 10px;
+            --button-padding: 1rem 2rem;
+            --button-font-size: 1.2rem;
+        }
+
+        .dark-mode {
+            --modal-bg: rgba(33, 33, 33, 0.95);
+            --modal-text: #ffffff;
+            --modal-text-secondary: #cccccc;
+            --modal-button-bg: #66BB6A;
+            --modal-button-secondary: #42A5F5;
+        }
+
+        body {
+            background: url(/static/beach.png) center/cover fixed;
+            margin: 0; padding: 0; min-height: 100vh;
+            font-family: 'Fredoka One', cursive;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            overflow: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        html {
+            scrollbar-width: none;
+        }
+
+        .score-display {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--coin-counter-bg);
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.5rem;
+            z-index: 100;
+            font-family: 'Fredoka One', cursive;
+        }
+
+        .score-icon {
+            width: 32px;
+            height: 32px;
+            image-rendering: pixelated;
+        }
+
+        .score-amount {
+            font-weight: bold;
+        }
+
+        .dark-mode .score-display {
+            background: rgba(0,0,0,0.8);
+        }
+
+        .obstacle {
+            position: absolute;
+            bottom: 0;
+            width: 64px;
+            height: 64px;
+            image-rendering: pixelated;
+            z-index: 10;
+        }
+
+        .ground-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const CONFIG = {
+                OBSTACLE_SPAWN_DISTANCE: 800,
+                OBSTACLE_SPEED: 8,
+                MOVE_SPEED: 400,
+                JUMP_POWER: -25,
+                GRAVITY: 1.2,
+                GROUND_Y: window.innerHeight * 0.75,
+                MEEPLE_POSITION: { left: '5rem', bottom: '0px' }
+            };
+
+            let gameState = {
+                score: 0,
+                obstacles: [],
+                lastObstacleX: window.innerWidth,
+                gameOver: false,
+                keysPressed: {},
+                isJumping: false,
+                jumpVelocity: 0,
+                meepleBottom: 0
+            };
+
+            function initializeGame() {
+                const meeple = document.getElementById('player-meeple-display');
+                const scoreCounter = document.getElementById('score-count');
+
+                const selectedColor = localStorage.getItem('selectedMeepleColor') || 'blue';
+                meeple.src = `/static/meeple-${selectedColor}.png`;
+                document.body.classList.add('dark-mode');
+
+                gameState.groundY = CONFIG.GROUND_Y;
+                gameState.meepleBottom = 0;
+
+                Object.assign(meeple.style, {
+                    left: CONFIG.MEEPLE_POSITION.left,
+                    bottom: CONFIG.MEEPLE_POSITION.bottom,
+                    transform: 'none',
+                    transition: 'none',
+                    position: 'absolute',
+                    width: '128px',
+                    height: '128px'
+                });
+
+                scoreCounter.textContent = gameState.score;
+                return { meeple, scoreCounter };
+            }
+
+            const { meeple, scoreCounter } = initializeGame();
+
+            function createObstacle() {
+                const obstacle = document.createElement('img');
+                obstacle.src = '/static/trash.png';
+                obstacle.className = 'obstacle';
+                obstacle.style.left = window.innerWidth + 'px';
+                obstacle.style.bottom = '0px';
+                document.body.appendChild(obstacle);
+
+                return {
+                    element: obstacle,
+                    x: window.innerWidth,
+                    passed: false
+                };
+            }
+
+            function checkCollision(obstacleRect, meepleRect) {
+                return obstacleRect.right >= meepleRect.left &&
+                       obstacleRect.left <= meepleRect.right &&
+                       obstacleRect.bottom >= meepleRect.top &&
+                       obstacleRect.top <= meepleRect.bottom;
+            }
+
+            function gameLoop() {
+                if (gameState.gameOver) return;
+
+                const currentTime = Date.now();
+                const meepleRect = meeple.getBoundingClientRect();
+
+                if (window.innerWidth - gameState.lastObstacleX > CONFIG.OBSTACLE_SPAWN_DISTANCE) {
+                    gameState.obstacles.push(createObstacle());
+                    gameState.lastObstacleX = window.innerWidth;
+                }
+
+                for (let i = gameState.obstacles.length - 1; i >= 0; i--) {
+                    const obstacle = gameState.obstacles[i];
+                    obstacle.x -= CONFIG.OBSTACLE_SPEED;
+                    obstacle.element.style.left = obstacle.x + 'px';
+
+                    const obstacleRect = obstacle.element.getBoundingClientRect();
+
+                    if (checkCollision(obstacleRect, meepleRect)) {
+                        gameState.gameOver = true;
+                        showGameOver('You hit an obstacle! Game Over!');
+                        return;
+                    }
+
+                    if (!obstacle.passed && obstacle.x + obstacle.element.offsetWidth < meepleRect.left) {
+                        obstacle.passed = true;
+                        gameState.score += 10;
+                        scoreCounter.textContent = gameState.score;
+                    }
+
+                    if (obstacle.x < -obstacle.element.offsetWidth) {
+                        obstacle.element.remove();
+                        gameState.obstacles.splice(i, 1);
+                    }
+                }
+
+                if (gameState.isJumping || gameState.meepleBottom > 0) {
+                    gameState.jumpVelocity += CONFIG.GRAVITY;
+                    gameState.meepleBottom -= gameState.jumpVelocity;
+
+                    if (gameState.meepleBottom <= 0) {
+                        gameState.meepleBottom = 0;
+                        gameState.isJumping = false;
+                        gameState.jumpVelocity = 0;
+                    }
+
+                    meeple.style.bottom = gameState.meepleBottom + 'px';
+                }
+
+                requestAnimationFrame(gameLoop);
+            }
+
+            function jump() {
+                if (!gameState.isJumping && !gameState.gameOver) {
+                    gameState.isJumping = true;
+                    gameState.jumpVelocity = CONFIG.JUMP_POWER;
+                }
+            }
+
+            function createStyledElement(tag, styles, properties = {}) {
+                const element = document.createElement(tag);
+                if (styles) element.style.cssText = styles;
+                Object.assign(element, properties);
+                return element;
+            }
+
+            function createModalButton(text, bgColor, onClick) {
+                return createStyledElement('button', `
+                    background: ${bgColor}; color: white; border: none;
+                    padding: var(--button-padding); border-radius: var(--button-radius);
+                    font-size: var(--button-font-size); cursor: pointer; font-family: inherit;
+                `, { textContent: text, onclick: onClick });
+            }
+
+            function showGameOver(message) {
+                const modal = createStyledElement('div', `
+                    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                    background: var(--modal-overlay); display: flex; justify-content: center;
+                    align-items: center; z-index: var(--modal-z-index);
+                    font-family: 'Fredoka One', cursive;
+                `);
+
+                const content = createStyledElement('div', `
+                    background: var(--modal-bg); padding: var(--modal-padding);
+                    border-radius: var(--modal-radius); text-align: center;
+                    max-width: 400px; width: 90%;
+                `);
+
+                content.innerHTML = `
+                    <h2 style="color: var(--modal-text); margin-bottom: 1rem;">Game Over!</h2>
+                    <p style="color: var(--modal-text-secondary); margin-bottom: 1rem;">${message}</p>
+                    <p style="color: var(--modal-text-secondary); margin-bottom: 1rem;">
+                        Score: <strong style="color: var(--modal-text);">${gameState.score}</strong>
+                    </p>
+                `;
+
+                const buttonContainer = createStyledElement('div', 'display: flex; gap: 1rem; justify-content: center;');
+
+                buttonContainer.appendChild(
+                    createModalButton('Play Again', 'var(--modal-button-bg)', () => location.reload())
+                );
+                buttonContainer.appendChild(
+                    createModalButton('Return to Hub', 'var(--modal-button-secondary)', () => window.location.href = '/play.html')
+                );
+
+                content.appendChild(buttonContainer);
+                modal.appendChild(content);
+                document.body.appendChild(modal);
+            }
+
+            function handleKeyEvent(event, pressed) {
+                const key = event.key.toLowerCase();
+                if (key === ' ' && pressed && !gameState.gameOver) {
+                    jump();
+                    event.preventDefault();
+                }
+            }
+
+            document.addEventListener('keydown', (event) => handleKeyEvent(event, true));
+            document.addEventListener('click', () => !gameState.gameOver && jump());
+
+            gameLoop();
+        });
+
+        function createContextMenu(event) {
+            event.preventDefault();
+            const menu = document.createElement('div');
+            menu.style.cssText = `
+                position: fixed;
+                top: ${event.clientY}px;
+                left: ${event.clientX}px;
+                background: #333;
+                color: #fff;
+                padding: 10px;
+                border-radius: 8px;
+                z-index: 9999;
+                font-family: 'Fredoka One', cursive;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            `;
+
+            menu.innerHTML = `
+                <div style="margin-bottom: 8px;"><b>Navigation</b></div>
+                <div onclick="window.location.href='/arcade-menu.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🎮 Back to Arcade</div>
+                <div onclick="window.location.href='/index.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🏠 Home</div>
+                <div onclick="window.location.href='/play.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🏰 Hub</div>
+                <div onclick="window.location.href='/fishing-frenzy-menu.html'" style="cursor:pointer;padding:4px 8px;border-radius:4px;margin:2px 0;">🎣 Fishing</div>
+            `;
+
+            document.body.appendChild(menu);
+            setTimeout(() => menu.remove(), 5000);
+            document.addEventListener('click', () => menu.remove(), { once: true });
+        }
+
+        document.addEventListener('contextmenu', createContextMenu);
+    </script>
+    <div id="score-counter" class="score-display">
+        <span>Score:</span>
+        <span id="score-count" class="score-amount">0</span>
+    </div>
+    <div class="ground-line"></div>
+    <img id="player-meeple-display" src="/static/meeple-blue.png" alt="Your Meeple" style="position: absolute;">
+</body>
+</html>
